@@ -3,13 +3,15 @@ package persistence.finance;
 import literals.ApplicationLiterals;
 import literals.enums.Tables;
 import org.apache.log4j.Logger;
+import persistence.Connect;
 import utilities.exceptions.AppException;
 import utilities.DateUtility;
 
 import javax.swing.*;
 import java.sql.*;
 import java.text.NumberFormat;
-import java.util.Locale;
+import java.time.LocalDate;
+import java.util.*;
 
 public class InvestmentData {
 
@@ -95,12 +97,44 @@ public class InvestmentData {
         }
 
         Locale locale = new Locale("en", "US");
-        NumberFormat currencyFormatter = NumberFormat
-                .getCurrencyInstance(locale);
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
         String strBal = currencyFormatter.format(balance);
         JOptionPane.showMessageDialog(null,
                 "<html>The most recent Janus Investment Accounts balance details:<br><ul><li>"
                         + date + ":&emsp;<b>" + strBal + "</b></html>",
                 "Janus Balance", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static Map<LocalDate, Double> getInvestmentData(String account) {
+        logger.debug("Getting dates for investments");
+
+        Map<LocalDate, Double> dates = new LinkedHashMap<>();
+
+        String SQL_TEXT = "SELECT DATE, BALANCE FROM "
+                + Tables.INVESTMENTS + " where ACCOUNT_NAME = '" + account.toUpperCase() + "'";
+        Statement statement;
+        ResultSet rs;
+        Connection con;
+
+        try {
+            con = Connect.getConnection();
+
+            statement = con.createStatement();
+            rs = statement.executeQuery(SQL_TEXT);
+
+            while (rs.next()) {
+                String dateString = rs.getString(1);
+                Double amount = rs.getDouble(2);
+
+                LocalDate date = LocalDate.parse(dateString, ApplicationLiterals.DATABASE_DATE);
+                dates.put(date, amount);
+            }
+
+            con.close();
+        } catch (SQLException e) {
+            throw new AppException(e);
+        }
+
+        return dates;
     }
 }

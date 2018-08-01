@@ -12,6 +12,7 @@ import views.common.components.RequestFocusListener;
 import views.common.components.Title;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.sql.Connection;
 
@@ -22,6 +23,12 @@ public class InvestmentTab extends JPanel {
 
     public final static JButton fidelity = new MultiLabelButton("Update 401K", MultiLabelButton.BOTTOM, Icons.FIDELITY_ICON);
     public final static JButton janus = new MultiLabelButton("Update Janus", MultiLabelButton.BOTTOM, Icons.JANUS_ICON);
+
+    private final static JLabel thirtyDayLabel = new JLabel("30-Day:");
+    private final static JLabel sixtyDayLabel = new JLabel("60-Day:");
+    private final static JLabel ninetyDayLabel = new JLabel("90-Day:");
+    private final static JLabel yearLabel = new JLabel("1 Year:");
+
     private Connection con;
 
     public InvestmentTab() {
@@ -39,12 +46,18 @@ public class InvestmentTab extends JPanel {
         investContent.add(fidelity);
         investContent.add(janusV);
         investContent.add(janus);
-        investContent.setBorder(BorderFactory.createCompoundBorder(
-                ApplicationLiterals.PADDED_SPACE,
-                BorderFactory.createTitledBorder("Investment Actions:")));
+        investContent.setBorder(createCompoundBorder("Investment Actions:"));
+
+        JPanel trendContent = new JPanel(new GridLayout(4,2,5,5));
+        trendContent.add(thirtyDayLabel);
+        trendContent.add(sixtyDayLabel);
+        trendContent.add(ninetyDayLabel);
+        trendContent.add(yearLabel);
+        trendContent.setBorder(createCompoundBorder("Historical Trends:"));
 
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.add(investContent, BorderLayout.NORTH);
+        wrapper.add(trendContent, BorderLayout.CENTER);
 
         this.setLayout(new BorderLayout());
         this.add(new Title("Investments"), BorderLayout.NORTH);
@@ -104,5 +117,12 @@ public class InvestmentTab extends JPanel {
         fidelityV.addActionListener(e -> InvestmentData.getLatestFidelityBalance(con));
 
         janusV.addActionListener(e -> InvestmentData.getLatestJanusBalance(con));
+    }
+
+    private Border createCompoundBorder(String label) {
+        return BorderFactory.createCompoundBorder(
+            ApplicationLiterals.PADDED_SPACE,
+            BorderFactory.createTitledBorder(label)
+        );
     }
 }

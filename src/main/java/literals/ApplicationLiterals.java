@@ -9,6 +9,7 @@ import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public abstract class ApplicationLiterals {
@@ -107,6 +108,7 @@ public abstract class ApplicationLiterals {
 	public static final SimpleDateFormat FULL_DATE = new SimpleDateFormat("EEEE, MMM d  h:mm:ss a");
 	public static final SimpleDateFormat YEAR_MONTH_DAY_CONDENSED = new SimpleDateFormat("yyyyMMdd");
 	public static final SimpleDateFormat MONTH_DAY_YEAR = new SimpleDateFormat("MMM d, yyyy");
+	public static final DateTimeFormatter DATABASE_DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	/*
 	 * States
