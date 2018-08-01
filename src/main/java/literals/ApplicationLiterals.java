@@ -1,6 +1,5 @@
 package literals;
 
-import program.PersonalFinance;
 import utilities.ReadConfig;
 
 import javax.swing.*;
@@ -30,7 +29,7 @@ public abstract class ApplicationLiterals {
 
 	public static final String APP_TITLE = "Finance Utility";
 	public static final String APP_ARTIFACT = "finance";
-	public static final String VERSION = "2.2.0";
+	public static final String VERSION = "2.3.0";
 
 	private static final String ROOT_PASSWORD = "RootPassword";
 	private static final String ENCRYPTION_KEY = "EncryptionKey";

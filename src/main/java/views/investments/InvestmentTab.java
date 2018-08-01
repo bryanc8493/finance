@@ -5,6 +5,7 @@ import literals.Icons;
 import org.apache.log4j.Logger;
 import persistence.Connect;
 import persistence.finance.InvestmentData;
+import utilities.InvestmentTrendData;
 import views.common.Loading;
 import views.common.components.ApplicationControl;
 import views.common.components.MultiLabelButton;
@@ -15,6 +16,9 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.sql.Connection;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.Map;
 
 public class InvestmentTab extends JPanel {
 
@@ -28,6 +32,13 @@ public class InvestmentTab extends JPanel {
     private final static JLabel sixtyDayLabel = new JLabel("60-Day:");
     private final static JLabel ninetyDayLabel = new JLabel("90-Day:");
     private final static JLabel yearLabel = new JLabel("1 Year:");
+
+    private static JLabel thirtyDay = new JLabel();
+    private static JLabel sixtyDay = new JLabel();
+    private static JLabel ninetyDay = new JLabel();
+    private static JLabel year = new JLabel();
+
+    private static NumberFormat currency = ApplicationLiterals.getNumberFormat();
 
     private Connection con;
 
@@ -48,11 +59,17 @@ public class InvestmentTab extends JPanel {
         investContent.add(janus);
         investContent.setBorder(createCompoundBorder("Investment Actions:"));
 
+        setTrendValues();
+
         JPanel trendContent = new JPanel(new GridLayout(4,2,5,5));
         trendContent.add(thirtyDayLabel);
+        trendContent.add(thirtyDay);
         trendContent.add(sixtyDayLabel);
+        trendContent.add(sixtyDay);
         trendContent.add(ninetyDayLabel);
+        trendContent.add(ninetyDay);
         trendContent.add(yearLabel);
+        trendContent.add(year);
         trendContent.setBorder(createCompoundBorder("Historical Trends:"));
 
         JPanel wrapper = new JPanel(new BorderLayout());
@@ -67,8 +84,7 @@ public class InvestmentTab extends JPanel {
                     BorderLayout.SOUTH);
 
         fidelity.addActionListener(e -> {
-            JFormattedTextField tf = new JFormattedTextField(
-                    ApplicationLiterals.getCurrencyFormat());
+            JFormattedTextField tf = new JFormattedTextField(ApplicationLiterals.getCurrencyFormat());
             tf.setColumns(10);
             tf.setValue(0.0);
             tf.setFont(ApplicationLiterals.APP_FONT);
@@ -78,15 +94,10 @@ public class InvestmentTab extends JPanel {
                     JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.INFORMATION_MESSAGE);
             if (input == JOptionPane.OK_OPTION) {
-                String balance = tf
-                        .getText()
-                        .replace(ApplicationLiterals.DOLLAR,
-                                ApplicationLiterals.EMPTY)
-                        .replace(ApplicationLiterals.COMMA,
-                                ApplicationLiterals.EMPTY);
+                String balance = tf.getText().replace(ApplicationLiterals.DOLLAR, ApplicationLiterals.EMPTY)
+                        .replace(ApplicationLiterals.COMMA, ApplicationLiterals.EMPTY);
 
-                InvestmentData.updateInvestmentAccount(con,
-                        ApplicationLiterals.FIDELITY, balance);
+                InvestmentData.updateInvestmentAccount(con, ApplicationLiterals.FIDELITY, balance);
                 JOptionPane.showMessageDialog(null,
                         "Updated Fidelity Table", "Success",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -94,8 +105,7 @@ public class InvestmentTab extends JPanel {
         });
 
         janus.addActionListener(e -> {
-            JFormattedTextField tf = new JFormattedTextField(
-                    ApplicationLiterals.getCurrencyFormat());
+            JFormattedTextField tf = new JFormattedTextField(ApplicationLiterals.getCurrencyFormat());
             tf.setColumns(10);
             tf.setValue(0.0);
             tf.setFont(ApplicationLiterals.APP_FONT);
@@ -107,8 +117,7 @@ public class InvestmentTab extends JPanel {
                 String balance = tf.getText().replace("$", "")
                         .replace(",", "");
 
-                InvestmentData.updateInvestmentAccount(con,
-                        ApplicationLiterals.JANUS, balance);
+                InvestmentData.updateInvestmentAccount(con, ApplicationLiterals.JANUS, balance);
                 JOptionPane.showMessageDialog(null, "Updated Janus Table",
                         "Success", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -124,5 +133,19 @@ public class InvestmentTab extends JPanel {
             ApplicationLiterals.PADDED_SPACE,
             BorderFactory.createTitledBorder(label)
         );
+    }
+
+    private void setTrendValues() {
+        Map<LocalDate, Double> trendData = InvestmentData.getInvestmentData(ApplicationLiterals.FIDELITY);
+
+        Double thirtyData = InvestmentTrendData.determineTrendAmount(30, trendData);
+        Double sixtyData = InvestmentTrendData.determineTrendAmount(60, trendData);
+        Double ninetyData = InvestmentTrendData.determineTrendAmount(90, trendData);
+        Double yearData = InvestmentTrendData.determineTrendAmount(365, trendData);
+
+        thirtyDay.setText("$ " + currency.format(thirtyData));
+        sixtyDay.setText("$ " + currency.format(sixtyData));
+        ninetyDay.setText("$ " + currency.format(ninetyData));
+        year.setText("$ " + currency.format(yearData));
     }
 }
