@@ -18,7 +18,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +34,6 @@ public class AddressTab extends JPanel {
         logger.debug("Initializing and populating Address Tab");
         Loading.update("Retrieving address data", 90);
 
-        Connection con = Connect.getConnection();
         final JButton view = new MultiLabelButton("View Addresses", MultiLabelButton.BOTTOM, Icons.VIEW_ICON);
         final JButton add = new MultiLabelButton(" New Address ", MultiLabelButton.BOTTOM, Icons.ADD_ICON);
         final JButton edit = new MultiLabelButton(" Edit Addresses ", MultiLabelButton.BOTTOM, Icons.EDIT_ICON);
@@ -61,9 +59,7 @@ public class AddressTab extends JPanel {
         this.setLayout(new BorderLayout(10, 10));
         this.add(title, BorderLayout.NORTH);
         this.add(content, BorderLayout.CENTER);
-        this.add(ApplicationControl.closeAndLogout(con,
-                    (JFrame) SwingUtilities.getRoot(this)),
-                    BorderLayout.SOUTH);
+        this.add(ApplicationControl.closeAndLogout((JFrame) SwingUtilities.getRoot(this)), BorderLayout.SOUTH);
 
         view.addActionListener(e ->  {
             JFrame f = new JFrame("All Addresses");

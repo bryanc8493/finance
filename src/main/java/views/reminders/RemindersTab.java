@@ -4,7 +4,6 @@ import beans.Reminder;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;
-import persistence.Connect;
 import persistence.reminders.ReminderData;
 import views.common.Loading;
 import views.common.components.ApplicationControl;
@@ -20,7 +19,6 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
 
 public class RemindersTab extends JPanel {
 
@@ -32,8 +30,6 @@ public class RemindersTab extends JPanel {
     public RemindersTab() {
         log.debug("Initializing and populating Reminders Tab");
         Loading.update("Retrieving reminder data", 100);
-
-        Connection con = Connect.getConnection();
 
         final JButton add = new MultiLabelButton(" New Reminder ", MultiLabelButton.BOTTOM, Icons.ADD_ICON);
         final JButton edit = new MultiLabelButton(" Edit Reminders ", MultiLabelButton.BOTTOM, Icons.EDIT_ICON);
@@ -78,9 +74,7 @@ public class RemindersTab extends JPanel {
         this.setLayout(new BorderLayout(10, 10));
         this.add(title, BorderLayout.NORTH);
         this.add(content, BorderLayout.CENTER);
-        this.add(ApplicationControl.closeAndLogout(con,
-                (JFrame) SwingUtilities.getRoot(this)),
-                BorderLayout.SOUTH);
+        this.add(ApplicationControl.closeAndLogout((JFrame) SwingUtilities.getRoot(this)), BorderLayout.SOUTH);
 
         add.addActionListener(e -> NewReminder.addNewReminder());
         edit.addActionListener(e -> new ModifyReminders(false));

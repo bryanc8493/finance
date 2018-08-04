@@ -1,11 +1,9 @@
 package beans;
 
-import java.text.DecimalFormat;
+import literals.ApplicationLiterals;
 
 public class MonthlyRecord {
 
-	private static final DecimalFormat df = new DecimalFormat("#.##");
-	
 	public MonthlyRecord() {
 		
 	}
@@ -71,7 +69,7 @@ public class MonthlyRecord {
 	}
 
 	public void setCashFlow(double income, double expenses) {
-		String temp = df.format(income - expenses);
+		String temp = ApplicationLiterals.DOUBLE_FORMAT.format(income - expenses);
 		this.cashFlow = Double.parseDouble(temp);
 	}
 

@@ -1,9 +1,10 @@
 package views.investments;
 
+import beans.InvestmentTrend;
 import literals.ApplicationLiterals;
 import literals.Icons;
+import literals.enums.InvestmentAccount;
 import org.apache.log4j.Logger;
-import persistence.Connect;
 import persistence.finance.InvestmentData;
 import utilities.InvestmentTrendData;
 import views.common.Loading;
@@ -15,7 +16,6 @@ import views.common.components.Title;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.sql.Connection;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.Map;
@@ -28,10 +28,15 @@ public class InvestmentTab extends JPanel {
     public final static JButton fidelity = new MultiLabelButton("Update 401K", MultiLabelButton.BOTTOM, Icons.FIDELITY_ICON);
     public final static JButton janus = new MultiLabelButton("Update Janus", MultiLabelButton.BOTTOM, Icons.JANUS_ICON);
 
-    private final static JLabel thirtyDayLabel = new JLabel("30-Day:");
-    private final static JLabel sixtyDayLabel = new JLabel("60-Day:");
-    private final static JLabel ninetyDayLabel = new JLabel("90-Day:");
-    private final static JLabel yearLabel = new JLabel("1 Year:");
+    private final static JLabel thirtyDayLabel = new JLabel();
+    private final static JLabel sixtyDayLabel = new JLabel();
+    private final static JLabel ninetyDayLabel = new JLabel();
+    private final static JLabel yearLabel = new JLabel("YTD:");
+
+    private final static JLabel thirtyDayPercent = new JLabel();
+    private final static JLabel sixtyDayPercent = new JLabel();
+    private final static JLabel ninetyDayPercent = new JLabel();
+    private final static JLabel yearPercent = new JLabel();
 
     private static JLabel thirtyDay = new JLabel();
     private static JLabel sixtyDay = new JLabel();
@@ -40,13 +45,10 @@ public class InvestmentTab extends JPanel {
 
     private static NumberFormat currency = ApplicationLiterals.getNumberFormat();
 
-    private Connection con;
-
     public InvestmentTab() {
         logger.debug("Initializing and population Investments Tab");
         Loading.update("Retrieving investment data", 72);
 
-        con = Connect.getConnection();
         final JButton fidelityV = new MultiLabelButton("View 401K", MultiLabelButton.BOTTOM, Icons.FIDELITY_ICON);
         final JButton janusV = new MultiLabelButton("View Janus", MultiLabelButton.BOTTOM, Icons.JANUS_ICON);
         janusV.setEnabled(false);
@@ -61,27 +63,33 @@ public class InvestmentTab extends JPanel {
 
         setTrendValues();
 
-        JPanel trendContent = new JPanel(new GridLayout(4,2,5,5));
+        JPanel trendContent = new JPanel(new GridLayout(4,3,0,5));
         trendContent.add(thirtyDayLabel);
+        trendContent.add(thirtyDayPercent);
         trendContent.add(thirtyDay);
         trendContent.add(sixtyDayLabel);
+        trendContent.add(sixtyDayPercent);
         trendContent.add(sixtyDay);
         trendContent.add(ninetyDayLabel);
+        trendContent.add(ninetyDayPercent);
         trendContent.add(ninetyDay);
         trendContent.add(yearLabel);
+        trendContent.add(yearPercent);
         trendContent.add(year);
         trendContent.setBorder(createCompoundBorder("Historical Trends:"));
 
+        JPanel dataContent = new JPanel(new GridLayout(1,2));
+        dataContent.add(trendContent);
+        dataContent.add(new JPanel());
+
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.add(investContent, BorderLayout.NORTH);
-        wrapper.add(trendContent, BorderLayout.CENTER);
+        wrapper.add(dataContent, BorderLayout.CENTER);
 
         this.setLayout(new BorderLayout());
         this.add(new Title("Investments"), BorderLayout.NORTH);
         this.add(wrapper, BorderLayout.CENTER);
-        this.add(ApplicationControl.closeAndLogout(con,
-                    (JFrame) SwingUtilities.getRoot(this)),
-                    BorderLayout.SOUTH);
+        this.add(ApplicationControl.closeAndLogout((JFrame) SwingUtilities.getRoot(this)), BorderLayout.SOUTH);
 
         fidelity.addActionListener(e -> {
             JFormattedTextField tf = new JFormattedTextField(ApplicationLiterals.getCurrencyFormat());
@@ -97,7 +105,7 @@ public class InvestmentTab extends JPanel {
                 String balance = tf.getText().replace(ApplicationLiterals.DOLLAR, ApplicationLiterals.EMPTY)
                         .replace(ApplicationLiterals.COMMA, ApplicationLiterals.EMPTY);
 
-                InvestmentData.updateInvestmentAccount(con, ApplicationLiterals.FIDELITY, balance);
+                InvestmentData.updateInvestmentAccount(InvestmentAccount.FIDELITY, balance);
                 JOptionPane.showMessageDialog(null,
                         "Updated Fidelity Table", "Success",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -117,15 +125,15 @@ public class InvestmentTab extends JPanel {
                 String balance = tf.getText().replace("$", "")
                         .replace(",", "");
 
-                InvestmentData.updateInvestmentAccount(con, ApplicationLiterals.JANUS, balance);
+                InvestmentData.updateInvestmentAccount(InvestmentAccount.JANUS, balance);
                 JOptionPane.showMessageDialog(null, "Updated Janus Table",
                         "Success", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
-        fidelityV.addActionListener(e -> InvestmentData.getLatestFidelityBalance(con));
+        fidelityV.addActionListener(e -> InvestmentData.getLatestAccountBalance(InvestmentAccount.FIDELITY));
 
-        janusV.addActionListener(e -> InvestmentData.getLatestJanusBalance(con));
+        janusV.addActionListener(e -> InvestmentData.getLatestAccountBalance(InvestmentAccount.JANUS));
     }
 
     private Border createCompoundBorder(String label) {
@@ -136,16 +144,38 @@ public class InvestmentTab extends JPanel {
     }
 
     private void setTrendValues() {
-        Map<LocalDate, Double> trendData = InvestmentData.getInvestmentData(ApplicationLiterals.FIDELITY);
+        Map<LocalDate, Double> trendData = InvestmentData.getInvestmentData(InvestmentAccount.FIDELITY);
 
-        Double thirtyData = InvestmentTrendData.determineTrendAmount(30, trendData);
-        Double sixtyData = InvestmentTrendData.determineTrendAmount(60, trendData);
-        Double ninetyData = InvestmentTrendData.determineTrendAmount(90, trendData);
-        Double yearData = InvestmentTrendData.determineTrendAmount(365, trendData);
+        InvestmentTrend thirtyData = InvestmentTrendData.determineTrendAmount(30, trendData, InvestmentAccount.FIDELITY);
+        InvestmentTrend sixtyData = InvestmentTrendData.determineTrendAmount(60, trendData, InvestmentAccount.FIDELITY);
+        InvestmentTrend ninetyData = InvestmentTrendData.determineTrendAmount(90, trendData, InvestmentAccount.FIDELITY);
+        InvestmentTrend yearData = InvestmentTrendData.determineTrendAmount(365, trendData, InvestmentAccount.FIDELITY);
 
-        thirtyDay.setText("$ " + currency.format(thirtyData));
-        sixtyDay.setText("$ " + currency.format(sixtyData));
-        ninetyDay.setText("$ " + currency.format(ninetyData));
-        year.setText("$ " + currency.format(yearData));
+        thirtyDay.setText("$ " + currency.format(thirtyData.getTrendPeriodAmount()));
+        sixtyDay.setText("$ " + currency.format(sixtyData.getTrendPeriodAmount()));
+        ninetyDay.setText("$ " + currency.format(ninetyData.getTrendPeriodAmount()));
+        year.setText("$ " + currency.format(yearData.getTrendPeriodAmount()));
+
+        setTrendPercentLabel(thirtyDayPercent, thirtyData);
+        setTrendPercentLabel(sixtyDayPercent, sixtyData);
+        setTrendPercentLabel(ninetyDayPercent, ninetyData);
+        setTrendPercentLabel(yearPercent, yearData);
+
+        thirtyDayLabel.setText(thirtyData.getActualTrendPeriod() + " Day:");
+        sixtyDayLabel.setText(sixtyData.getActualTrendPeriod() + " Day:");
+        ninetyDayLabel.setText(ninetyData.getActualTrendPeriod() + " Day:");
+    }
+
+    private void setTrendPercentLabel(JLabel label, InvestmentTrend data) {
+        String formattedPercent = ApplicationLiterals.DOUBLE_FORMAT.format(data.getTrendPercent());
+        label.setText(formattedPercent + ApplicationLiterals.PERCENT);
+
+        if (data.getTrendPercent() > 0.0) {
+            label.setForeground(ApplicationLiterals.APP_GREEN);
+        } else {
+            label.setForeground(Color.RED);
+        }
+
+        label.setFont(ApplicationLiterals.BOLD_FONT);
     }
 }

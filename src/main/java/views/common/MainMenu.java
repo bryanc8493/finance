@@ -27,7 +27,6 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
 import java.text.NumberFormat;
 
 public class MainMenu {
@@ -57,12 +56,10 @@ public class MainMenu {
 
         // Get current balance as of current date and time
         Loading.update("Determining account balances", 36);
-        final Connection con = Connect.getConnection();
         String amount = BalanceData.getTodaysBalance();
         amount = decimal.format(Double.parseDouble(amount));
 
-        // Get full balance (todays balance minus future payments excluding
-        // unpaid credits)
+        // Get full balance (todays balance minus future payments excluding unpaid credits)
         String futureBalance = BalanceData.getFutureBalance();
         futureBalance = decimal.format(Double.parseDouble(futureBalance));
 
@@ -70,8 +67,7 @@ public class MainMenu {
         String trueBalance = BalanceData.getTrueBalance();
         trueBalance = decimal.format(Double.parseDouble(trueBalance));
 
-        // Get data for last specified (in config) past entries and put in
-        // scroll pane for table
+        // Get data for last specified (in config) past entries and put in scroll pane for table
         int entriesToRetrieve = Integer.parseInt(ReadConfig.getConfigValue(ApplicationLiterals.VIEWING_AMOUNT_MAX));
         Loading.update("Gathering last " + entriesToRetrieve + " entries", 45);
         Object[][] previousRecords = Transactions.getPastEntries(entriesToRetrieve);
@@ -81,8 +77,7 @@ public class MainMenu {
         entriesScrollPane.setViewportView(table);
         entriesScrollPane.setVisible(true);
         Dimension d = table.getPreferredSize();
-        entriesScrollPane.setPreferredSize(new Dimension(d.width * 2, table
-                .getRowHeight() * 15));
+        entriesScrollPane.setPreferredSize(new Dimension(d.width * 2, table.getRowHeight() * 15));
 
         Loading.update("Looking for future payments", 54);
         String futurePayments = BalanceData.getFuturePayments();
@@ -104,7 +99,7 @@ public class MainMenu {
         futureBalBtn.setHorizontalAlignment(SwingConstants.LEFT);
         futureBalBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         if (isFutureBalancePositive) {
-            futureBalBtn.setForeground(Color.GREEN);
+            futureBalBtn.setForeground(ApplicationLiterals.APP_GREEN);
         } else {
             futureBalBtn.setForeground(Color.RED);
         }
@@ -163,7 +158,7 @@ public class MainMenu {
 
         JPanel bottom = new JPanel();
         bottom.setLayout(new BoxLayout(bottom, BoxLayout.Y_AXIS));
-        bottom.add(ApplicationControl.closeAndLogout(con, frame));
+        bottom.add(ApplicationControl.closeAndLogout(frame));
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.add(top, BorderLayout.NORTH);

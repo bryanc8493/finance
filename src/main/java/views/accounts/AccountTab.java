@@ -4,7 +4,6 @@ import beans.UpdatedRecord;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;
-import persistence.Connect;
 import persistence.accounts.AccountData;
 import utilities.exceptions.AppException;
 import utilities.security.Encoding;
@@ -25,7 +24,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +47,6 @@ public class AccountTab extends JPanel {
         logger.debug("Initializing and populating Accounts Tab");
         Loading.update("Retrieving account data", 81);
 
-        Connection con = Connect.getConnection();
         getAccountData(false);
 
         final JButton view = new MultiLabelButton("View Passwords", MultiLabelButton.BOTTOM, Icons.VIEW_ICON);
@@ -81,9 +78,7 @@ public class AccountTab extends JPanel {
         this.setLayout(new BorderLayout(10, 10));
         this.add(title, BorderLayout.NORTH);
         this.add(content, BorderLayout.CENTER);
-        this.add(ApplicationControl.closeAndLogout(con,
-                (JFrame) SwingUtilities.getRoot(this)),
-                BorderLayout.SOUTH);
+        this.add(ApplicationControl.closeAndLogout((JFrame) SwingUtilities.getRoot(this)), BorderLayout.SOUTH);
 
         view.addActionListener(e ->  {
             if (checkEncryptionKey()) {
@@ -185,8 +180,7 @@ public class AccountTab extends JPanel {
     private void getAccountData(boolean showPassword) {
         Object[][] records = AccountData.getAccounts();
         Object[] columnNames = { "ACCOUNT", "USERNAME", "PASSWORD" };
-        DefaultTableModel model = new DefaultTableModel(records,
-                columnNames) {
+        DefaultTableModel model = new DefaultTableModel(records, columnNames) {
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -221,8 +215,7 @@ public class AccountTab extends JPanel {
         acctSP.setViewportView(table);
         acctSP.setVisible(true);
         Dimension d = table.getPreferredSize();
-        acctSP.setPreferredSize(new Dimension(d.width * 3,
-                table.getRowHeight() * 12));
+        acctSP.setPreferredSize(new Dimension(d.width * 3, table.getRowHeight() * 12));
     }
 
     private void openSiteLogin(String url, String site) {

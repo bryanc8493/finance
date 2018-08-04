@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -48,15 +49,14 @@ public abstract class ApplicationLiterals {
 	public static final Font TAB_FONT = new Font("Sans Serif", Font.PLAIN, 14);
 
 	public static final Color APP_COLOR = new Color(7, 142, 104);
-	public static Color LINK_NOT_CLICKED = new Color(6, 69, 173);
-	public static Color LINK_CLICKED = new Color(102, 51, 102);
+	public static final Color LINK_NOT_CLICKED = new Color(6, 69, 173);
+	public static final Color LINK_CLICKED = new Color(102, 51, 102);
 	public static final Color GREY_TAB = Color.gray;
+	public static final Color APP_GREEN = new Color(7, 109, 31);
 
 	public static final Border TAB_BORDER = BorderFactory.createEmptyBorder(0,0,10,0);
 
 	public static final Border PADDED_SPACE = BorderFactory.createEmptyBorder(10, 25, 15, 25);
-	public static final String FIDELITY = "FIDELITY";
-	public static final String JANUS = "JANUS";
 
 	public static final String EXPENSE = "Expense";
 	public static final String INCOME = "Income";
@@ -73,6 +73,8 @@ public abstract class ApplicationLiterals {
 	public static final Double BONUS_MAXIMUM = 200.0;
 	public static final Double COMP_RATIO_MIN = 80.0;
 	public static final Double COMP_RATIO_MAX = 120.0;
+
+	public static final DecimalFormat DOUBLE_FORMAT = new DecimalFormat("#.00");
 
 	/*
 	 * Config literals
