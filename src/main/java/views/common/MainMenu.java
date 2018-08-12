@@ -216,9 +216,9 @@ public class MainMenu {
         lastRecords.addActionListener(e -> {
             logger.debug("Displaying last " + viewingAmount + " records");
             JFrame f = new JFrame("Past " + viewingAmount + " Records");
+            f.setIconImage(appIcon.getImage());
             JPanel p = new JPanel(new BorderLayout(10, 0));
-            JLabel label = new Title("Last " + viewingAmount
-                    + " Transactions");
+            JLabel label = new Title("Last " + viewingAmount + " Transactions");
             p.add(label, BorderLayout.NORTH);
             p.add(entriesScrollPane, BorderLayout.SOUTH);
             f.add(p);
