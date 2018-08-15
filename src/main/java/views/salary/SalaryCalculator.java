@@ -4,6 +4,7 @@ import beans.Salary;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;
+import persistence.Connect;
 import persistence.salary.SalaryData;
 import views.common.components.HintTextField;
 import utilities.SimpleDocumentListener;
@@ -22,6 +23,11 @@ public class SalaryCalculator implements ActionListener {
     private Logger logger = Logger.getLogger(SalaryCalculator.class);
     private Set<Salary> salaries;
     private NumberFormat decimal = ApplicationLiterals.getNumberFormat();
+
+    private JButton apply = new JButton("Apply Default");
+    private JButton save = new JButton("Set As Default");
+
+    private String currentUser = Connect.getCurrentUser();
 
     // Input components
     private JComboBox<Integer> jobGrade = new JComboBox<>();
@@ -66,6 +72,12 @@ public class SalaryCalculator implements ActionListener {
         JLabel MTIBonusAmtlbl = new JLabel("MTI Bonus Amount:");
         JLabel totalBonusAmtlbl = new JLabel("Total Bonus Amount:");
         JLabel totalPayAndBonuslbl = new JLabel("Base & All Rewards:");
+
+        JPanel buttons = new JPanel(new GridLayout(1,2,10,0));
+        buttons.add(apply);
+        buttons.add(save);
+        apply.setVisible(SalaryData.userSettingsExist(currentUser));
+        save.setVisible(false);
 
         // input grid
         JPanel input = new JPanel(new GridLayout(4, 2));

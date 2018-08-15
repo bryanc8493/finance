@@ -1,6 +1,7 @@
 package persistence.salary;
 
 import beans.Salary;
+import beans.SalaryConfiguration;
 import literals.ApplicationLiterals;
 import literals.enums.Databases;
 import literals.enums.Tables;
@@ -8,9 +9,7 @@ import org.apache.log4j.Logger;
 import persistence.Connect;
 import utilities.exceptions.AppException;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -41,9 +40,74 @@ public class SalaryData {
                 data.add(salary);
             }
             con.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new AppException(e);
         }
         return data;
+    }
+
+    public static void addSalarySetting(String user, SalaryConfiguration config) {
+        logger.debug("add new salary configuration for " + user);
+        String SQL_TEXT = "INSERT INTO " + Databases.ACCOUNTS + ApplicationLiterals.DOT
+                + Tables.PAY_SETTINGS + " (USER, GRADE, COMP_RATIO, STI, MTI) "
+                + "VALUES (?, ?, ?, ?, ?)";
+
+        try {
+            Connection con = Connect.getConnection();
+            PreparedStatement ps = con.prepareStatement(SQL_TEXT);
+            ps.setString(1, user);
+            ps.setInt(2, config.getGrade());
+            ps.setDouble(3, config.getCompRatio());
+            ps.setDouble(4, config.getSti());
+            ps.setDouble(5, config.getMti());
+            ps.executeUpdate();
+
+            con.close();
+        } catch (SQLException e) {
+            throw new AppException(e);
+        }
+    }
+
+    public static SalaryConfiguration getSalarySettings(String user) {
+        logger.debug("getting salary configuration for " + user);
+        SalaryConfiguration config = new SalaryConfiguration();
+
+        String SQL_TEXT = "SELECT GRADE, COMP_RATIO, STI, MTI "
+            + "FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT + Tables.PAY_SETTINGS;
+        try {
+            Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(SQL_TEXT);
+            while(rs.next()) {
+                config.setGrade(rs.getInt(1));
+                config.setCompRatio(rs.getDouble(2));
+                config.setSti(rs.getDouble(3));
+                config.setMti(rs.getDouble(4));
+            }
+            con.close();
+        } catch (SQLException e) {
+            throw new AppException(e);
+        }
+        return config;
+    }
+
+    public static boolean userSettingsExist(String user) {
+        logger.debug("checking if user salary default config exists");
+        String SQL_TEXT = "SELECT COUNT(*) "
+                + "FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT + Tables.PAY_SETTINGS
+                + " WHERE USER = '" + user + "'";
+        int records;
+
+        try {
+            Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(SQL_TEXT);
+            rs.next();
+            records = rs.getInt(1);
+            con.close();
+        } catch (SQLException e) {
+            throw new AppException(e);
+        }
+        return records == 1;
     }
 }
