@@ -1,6 +1,7 @@
 package views.salary;
 
 import beans.Salary;
+import beans.SalaryConfiguration;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;
@@ -8,6 +9,7 @@ import persistence.Connect;
 import persistence.salary.SalaryData;
 import views.common.components.HintTextField;
 import utilities.SimpleDocumentListener;
+import views.common.components.PrimaryButton;
 import views.common.components.Title;
 
 import javax.swing.*;
@@ -24,8 +26,8 @@ public class SalaryCalculator implements ActionListener {
     private Set<Salary> salaries;
     private NumberFormat decimal = ApplicationLiterals.getNumberFormat();
 
-    private JButton apply = new JButton("Apply Default");
-    private JButton save = new JButton("Set As Default");
+    private JButton apply = new PrimaryButton("Apply Default");
+    private JButton save = new PrimaryButton("Set As Default");
 
     private String currentUser = Connect.getCurrentUser();
 
@@ -73,11 +75,13 @@ public class SalaryCalculator implements ActionListener {
         JLabel totalBonusAmtlbl = new JLabel("Total Bonus Amount:");
         JLabel totalPayAndBonuslbl = new JLabel("Base & All Rewards:");
 
-        JPanel buttons = new JPanel(new GridLayout(1,2,10,0));
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.TRAILING));
         buttons.add(apply);
         buttons.add(save);
         apply.setVisible(SalaryData.userSettingsExist(currentUser));
-        save.setVisible(false);
+        apply.setActionCommand("apply");
+        save.setActionCommand("save");
+        save.setEnabled(false);
 
         // input grid
         JPanel input = new JPanel(new GridLayout(4, 2));
@@ -92,6 +96,7 @@ public class SalaryCalculator implements ActionListener {
         Border space = BorderFactory.createEmptyBorder(10, 25, 15, 25);
         input.setBorder(BorderFactory.createCompoundBorder(space,
                 BorderFactory.createTitledBorder("Input")));
+        jobGrade.setActionCommand("grade");
 
         // output grid
         JPanel output = new JPanel(new GridLayout(10, 2, 0, 13));
@@ -121,7 +126,8 @@ public class SalaryCalculator implements ActionListener {
         // content
         JPanel content = new JPanel(new BorderLayout());
         content.add(input, BorderLayout.NORTH);
-        content.add(output, BorderLayout.SOUTH);
+        content.add(output, BorderLayout.CENTER);
+        content.add(buttons, BorderLayout.SOUTH);
 
         // full panel
         JPanel full = new JPanel(new BorderLayout());
@@ -138,6 +144,8 @@ public class SalaryCalculator implements ActionListener {
         frame.setLocationRelativeTo(null);
 
         jobGrade.addActionListener(this);
+        save.addActionListener(this);
+        apply.addActionListener(this);
 
         compRatio.getDocument().addDocumentListener((SimpleDocumentListener) e -> {
             if(isValidCompRatio()) {
@@ -206,11 +214,9 @@ public class SalaryCalculator implements ActionListener {
     private void renderBasePay(Salary salary, Double comp) {
         basePay.setText("$ " + decimal.format(salary.getMidPay() * comp));
 
-        monthlyPay.setText("$ "
-                + decimal.format((salary.getMidPay() * comp) / 12));
+        monthlyPay.setText("$ " + decimal.format((salary.getMidPay() * comp) / 12));
 
-        biWeeklyPay.setText("$ "
-                + decimal.format((salary.getMidPay() * comp) / 12 / 2));
+        biWeeklyPay.setText("$ " + decimal.format((salary.getMidPay() * comp) / 12 / 2));
     }
 
     private void renderStiBonus(Double stiBonusPercentVal, Double basePayVal) {
@@ -227,8 +233,7 @@ public class SalaryCalculator implements ActionListener {
 
     private void renderMtiBonus(Double mtiBonusPercentVal,
                                 Double basePayVal, Double stiBonusPercentVal) {
-        MTIBonusPercent.setText(decimal.format(mtiBonusPercentVal)
-                + " %");
+        MTIBonusPercent.setText(decimal.format(mtiBonusPercentVal) + " %");
 
         mtiBonusPercentVal = mtiBonusPercentVal / 100;
         stiBonusPercentVal = stiBonusPercentVal / 100;
@@ -242,21 +247,19 @@ public class SalaryCalculator implements ActionListener {
                 + decimal.format(mtiBonusAmt
                 + (stiBonusPercentVal * basePayVal)));
 
-        double stiAndBaseAmt = (stiBonusPercentVal * basePayVal)
-                + basePayVal;
-        totalPayAndBonus.setText("$ "
-                + decimal.format(mtiBonusAmt + stiAndBaseAmt));
+        double stiAndBaseAmt = (stiBonusPercentVal * basePayVal) + basePayVal;
+        totalPayAndBonus.setText("$ " + decimal.format(mtiBonusAmt + stiAndBaseAmt));
     }
 
     private void onChangeHandler() {
         formatOutputLabels();
         Double comp, sti, mti;
+
         try {
             comp = Double.parseDouble(compRatio.getText().trim()) / 100.0;
             sti = Double.parseDouble(STIPerf.getText().trim()) / 100.0;
 
-            Salary salary = getSelectedGradeData(Integer.parseInt(jobGrade
-                    .getSelectedItem().toString()));
+            Salary salary = getSelectedGradeData(Integer.parseInt(jobGrade.getSelectedItem().toString()));
 
             double basePayVal = salary.getMidPay() * comp;
             renderBasePay(salary, comp);
@@ -278,6 +281,8 @@ public class SalaryCalculator implements ActionListener {
         } catch (NumberFormatException e) {
             logger.warn("parse exception during on change handler - " + e);
         }
+
+        save.setEnabled(minimumSelectionsMet());
     }
 
     private void populateJobGrades() {
@@ -291,12 +296,50 @@ public class SalaryCalculator implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent arg0) {
-        int selectedGrade = Integer.parseInt(jobGrade.getSelectedItem().toString());
-        if (selectedGrade >= 8) {
-            MTIPerf.setEnabled(true);
-        }else{
-            MTIPerf.setEnabled(false);
+    public void actionPerformed(ActionEvent e) {
+        Integer selectedGrade = Integer.parseInt(jobGrade.getSelectedItem().toString());
+        Integer gradeIndex = jobGrade.getSelectedIndex();
+
+        if( e.getActionCommand().equals("grade")) {
+            if (selectedGrade >= 8) {
+                MTIPerf.setEnabled(true);
+            }else {
+                MTIPerf.setEnabled(false);
+            }
+        }else if (e.getActionCommand().equals("save") && minimumSelectionsMet()) {
+            Double comp, sti, mti;
+
+            comp = Double.parseDouble(compRatio.getText().trim());
+            sti = Double.parseDouble(STIPerf.getText().trim());
+            mti = selectedGrade >= 8 ? Double.parseDouble(MTIPerf.getText().trim()) : null;
+
+            SalaryConfiguration config = new SalaryConfiguration(gradeIndex, comp, sti, mti);
+
+            if(SalaryData.userSettingsExist(currentUser)) {
+                SalaryData.updateSalarySetting(currentUser, config);
+            }else {
+                SalaryData.addSalarySetting(currentUser, config);
+            }
+
+            JOptionPane.showMessageDialog(null, "Default Saved",
+                    "Your default salary settings have been saved", JOptionPane.INFORMATION_MESSAGE);
+        }else if (e.getActionCommand().equals("apply")) {
+            SalaryConfiguration defaultConfig = SalaryData.getSalarySettings(currentUser);
+
+            jobGrade.setSelectedIndex(defaultConfig.getGrade());
+            compRatio.setText(String.valueOf(defaultConfig.getCompRatio()));
+            STIPerf.setText(String.valueOf(defaultConfig.getSti()));
+            MTIPerf.setText(String.valueOf(defaultConfig.getMti()));
+        }
+    }
+
+    private boolean minimumSelectionsMet() {
+        try {
+            Double.parseDouble(compRatio.getText().trim());
+            Double.parseDouble(STIPerf.getText().trim());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 

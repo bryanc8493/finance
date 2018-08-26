@@ -59,7 +59,42 @@ public class SalaryData {
             ps.setInt(2, config.getGrade());
             ps.setDouble(3, config.getCompRatio());
             ps.setDouble(4, config.getSti());
-            ps.setDouble(5, config.getMti());
+
+            if(config.getMti() == null) {
+                ps.setNull(5, 1);
+            }else {
+                ps.setDouble(5, config.getMti());
+            }
+
+            ps.executeUpdate();
+
+            con.close();
+        } catch (SQLException e) {
+            throw new AppException(e);
+        }
+    }
+
+    public static void updateSalarySetting(String user, SalaryConfiguration config) {
+        logger.debug("add new salary configuration for " + user);
+        String SQL_TEXT = "UPDATE " + Databases.ACCOUNTS + ApplicationLiterals.DOT + Tables.PAY_SETTINGS +
+                " SET GRADE = ?, COMP_RATIO = ?, STI = ?, MTI = ? " +
+                "WHERE USER = ?";
+
+        try {
+            Connection con = Connect.getConnection();
+            PreparedStatement ps = con.prepareStatement(SQL_TEXT);
+            ps.setInt(1, config.getGrade());
+            ps.setDouble(2, config.getCompRatio());
+            ps.setDouble(3, config.getSti());
+
+            if(config.getMti() == null) {
+                ps.setNull(4, 1);
+            }else {
+                ps.setDouble(4, config.getMti());
+            }
+
+            ps.setString(5, user);
+
             ps.executeUpdate();
 
             con.close();
