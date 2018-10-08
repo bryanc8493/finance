@@ -5,6 +5,7 @@ import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;
 import persistence.accounts.AccountData;
+import utilities.StringUtility;
 import utilities.exceptions.AppException;
 import views.common.components.PrimaryButton;
 import views.common.components.Title;
@@ -87,25 +88,22 @@ public class NewUser {
         close.addActionListener((e) -> frame.dispose());
 
         insert.addActionListener(e -> {
-            // Verify email field is not blank
-            if (emailField.getText().trim()
-                    .equals(ApplicationLiterals.EMPTY)) {
-                missingField.setText("email address cannot be blank");
-                missingField.setVisible(true);
-                frame.pack();
-            }
-
             // verify username field is not blank
-            else if (usernameField.getText().trim()
-                    .equals(ApplicationLiterals.EMPTY)) {
+            if (StringUtility.isEmpty(usernameField.getText())) {
                 missingField.setText("Username cannot be blank");
                 missingField.setVisible(true);
                 frame.pack();
             }
 
+            // Verify email field is not blank
+            else if (StringUtility.isEmpty(emailField.getText())) {
+                missingField.setText("email address cannot be blank");
+                missingField.setVisible(true);
+                frame.pack();
+            }
+
             // verify password field is not blank
-            else if (new String(passField.getPassword()).trim().equals(
-                    ApplicationLiterals.EMPTY)) {
+            else if (StringUtility.isEmpty(new String(passField.getPassword()))) {
                 missingField.setText("Password cannot be blank");
                 missingField.setVisible(true);
                 frame.pack();
@@ -130,8 +128,7 @@ public class NewUser {
             // Call method to insert new account
             else {
                 User user = new User();
-                user.setUsername(usernameField.getText().trim()
-                        .toUpperCase());
+                user.setUsername(usernameField.getText().trim().toUpperCase());
                 user.setEmail(emailField.getText().trim());
                 user.setPassword(new String(passField.getPassword()));
                 user.setStatus(ApplicationLiterals.UNLOCKED);

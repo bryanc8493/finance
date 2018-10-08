@@ -103,6 +103,10 @@ public class VerifyAccess {
             }
 
             if (!AccountData.doesUsernameExist(username)) {
+                JOptionPane.showMessageDialog(null, "Username " + username
+                                + " does not exist." + ApplicationLiterals.NEW_LINE
+                                + "Try again or create new account!",
+                        "Invalid User", JOptionPane.ERROR_MESSAGE);
                 frame.pack();
             } else {
                 verifyNotBanned(username);
