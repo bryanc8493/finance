@@ -71,7 +71,7 @@ public class MainMenu {
         int entriesToRetrieve = Integer.parseInt(ReadConfig.getConfigValue(ApplicationLiterals.VIEWING_AMOUNT_MAX));
         Loading.update("Gathering last " + entriesToRetrieve + " entries", 45);
         Object[][] previousRecords = Transactions.getPastEntries(entriesToRetrieve);
-        Object[] columnNames = { "ID", "TITLE", "TYPE", "DATE", "AMOUNT" };
+        Object[] columnNames = { "ID", "TITLE", "TYPE", "DATE", "AMOUNT", "STORE" };
         final JTable table = new JTable(previousRecords, columnNames);
         final JScrollPane entriesScrollPane = new JScrollPane(table);
         entriesScrollPane.setViewportView(table);

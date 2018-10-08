@@ -22,12 +22,10 @@ public class Savings {
     private JLabel totalLbl = new JLabel("Total Amount");
     private JLabel safetyLbl = new JLabel("Emergency");
     private JLabel houseLbl = new JLabel("House");
-    private JLabel weddingLbl = new JLabel("Wedding");
 
     private JLabel total = new JLabel();
     private JLabel safety = new JLabel();
     private JLabel house = new JLabel();
-    private JLabel wedding = new JLabel();
 
     private Locale locale = new Locale("en", "US");
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
@@ -45,11 +43,10 @@ public class Savings {
         JLabel title = new Title("Savings Account Details");
         JButton close = new PrimaryButton("Close");
 
-        JPanel content = new JPanel(new GridLayout(4,2, 0, 10));
+        JPanel content = new JPanel(new GridLayout(3,2, 0, 10));
         content.add(totalLbl); content.add(total);
         content.add(safetyLbl); content.add(safety);
         content.add(houseLbl); content.add(house);
-        content.add(weddingLbl); content.add(wedding);
         content.setBorder(BorderFactory.createEmptyBorder(20,30,20,30));
 
         JPanel button = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -74,27 +71,22 @@ public class Savings {
     }
 
     private void setAmounts() {
-        final Double HOUSE_AMT = BalanceData.getHouseSavings();
-
         double totalSavings = BalanceData.getSavingsBalance();
         String safetyString = ReadConfig.getConfigValue(ApplicationLiterals.SAVINGS_SAFE_AMT);
         double safetyAmt = Double.parseDouble(safetyString);
-        double remainder = totalSavings - safetyAmt - HOUSE_AMT;
+        double remainder = totalSavings - safetyAmt;
 
         total.setText(currencyFormatter.format(totalSavings));
         safety.setText(currencyFormatter.format(safetyAmt));
-        house.setText(currencyFormatter.format(HOUSE_AMT));
-        wedding.setText(currencyFormatter.format(remainder));
+        house.setText(currencyFormatter.format(remainder));
 
         safety.setForeground(Color.RED);
-        house.setForeground(Color.RED);
     }
 
     private void alignRight() {
         total.setHorizontalAlignment(JLabel.RIGHT);
         safety.setHorizontalAlignment(JLabel.RIGHT);
         house.setHorizontalAlignment(JLabel.RIGHT);
-        wedding.setHorizontalAlignment(JLabel.RIGHT);
     }
 
     private Set<JLabel> getLabelList() {
@@ -105,8 +97,6 @@ public class Savings {
         labels.add(safetyLbl);
         labels.add(house);
         labels.add(houseLbl);
-        labels.add(wedding);
-        labels.add(weddingLbl);
         return labels;
     }
 

@@ -264,6 +264,7 @@ public class NewTransaction {
                 tran.setDate(input_trans_date);
                 tran.setAmount(input_amount);
                 tran.setDescription(descField.getText());
+                tran.setStore(storeField.getText());
                 char creditFlag = credit.isSelected() ? '1' : '0';
                 tran.setCredit(creditFlag);
                 if (creditFlag == '1') {

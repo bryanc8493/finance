@@ -38,7 +38,7 @@ public class Connect extends ApplicationLiterals {
 		String username = Encoding.decrypt(ReadConfig.getConfigValue(DB_USER));
 		String pass = Encoding.decrypt(ReadConfig.getConfigValue(DB_PASS));
 
-		logger.info("Establishing initial database connection..." + username + "\t" + pass);
+		logger.info("Establishing initial database connection...");
 		Loading.update("Connecting to database", 9);
 
 		try {

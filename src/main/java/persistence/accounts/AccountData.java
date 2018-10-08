@@ -236,6 +236,7 @@ public class AccountData {
     }
 
     public static int newUser(User user) throws Exception {
+        System.out.println("running new user");
         logger.debug("Creating new user: " + user.getUsername());
         final Connection con = Connect.getConnection();
         String SQL_TEXT = "INSERT INTO " + Databases.ACCOUNTS + ApplicationLiterals.DOT
@@ -244,8 +245,9 @@ public class AccountData {
                 + "AES_ENCRYPT('" + user.getPassword() + "', '"
                 + Encoding.decrypt(ApplicationLiterals.getEncryptionKey())
                 + "'), now(), " + "'" + user.getPermission() + "', '"
-                + user.getStatus() + "')";
+                + user.getStatus() + "', null, null)";
 
+        System.out.println("query\t" + SQL_TEXT);
         PreparedStatement ps;
         try {
             ps = con.prepareStatement(SQL_TEXT);
@@ -433,10 +435,6 @@ public class AccountData {
                 logger.warn("Username " + user + " does not exist."
                         + ApplicationLiterals.NEW_LINE
                         + "Try again or create new account");
-                JOptionPane.showMessageDialog(null, "Username " + user
-                                + " does not exist." + ApplicationLiterals.NEW_LINE
-                                + "Try again or create new account!",
-                        "Invalid User", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         } catch (Exception e) {

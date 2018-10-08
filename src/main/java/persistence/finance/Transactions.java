@@ -23,10 +23,11 @@ public class Transactions {
 
     public static Object[][] getPastEntries(int entriesToRetrieve) {
         final Connection con = Connect.getConnection();
-        Object[][] records = new Object[entriesToRetrieve][5];
+        final int columns = 6;
+        Object[][] records = new Object[entriesToRetrieve][columns];
         logger.debug("Getting past " + entriesToRetrieve + " transaction records...");
 
-        String SQL_TEXT = "SELECT TRANSACTION_ID, TITLE, TYPE, TRANSACTION_DATE, AMOUNT FROM "
+        String SQL_TEXT = "SELECT TRANSACTION_ID, TITLE, TYPE, TRANSACTION_DATE, AMOUNT, STORE FROM "
                 + Databases.FINANCIAL + ApplicationLiterals.DOT + Tables.MONTHLY_TRANSACTIONS
                 + " ORDER BY TRANSACTION_ID desc limit " + entriesToRetrieve;
         Statement statement;
@@ -38,7 +39,7 @@ public class Transactions {
             rs = statement.executeQuery(SQL_TEXT);
 
             while (rs.next()) {
-                for (int i=0; i<5; i++) {
+                for (int i=0; i<columns; i++) {
                     records[recordCount][i] = rs.getString(i+1);
                 }
                 recordCount++;
@@ -230,19 +231,20 @@ public class Transactions {
             PreparedStatement ps;
             String SQL_TEXT = "INSERT INTO " + Databases.FINANCIAL + ApplicationLiterals.DOT
                     + Tables.MONTHLY_TRANSACTIONS  + " (TITLE, TYPE, CATEGORY, TRANSACTION_DATE, "
-                    + "AMOUNT, DESCRIPTION, CREDIT, CREDIT_PAID, CARD_USED) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    + "STORE, AMOUNT, DESCRIPTION, CREDIT, CREDIT_PAID, CARD_USED) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             ps = con.prepareStatement(SQL_TEXT);
             ps.setString(1, tran.getTitle());
             ps.setString(2, tran.getType());
             ps.setString(3, tran.getCategory());
             ps.setString(4, tran.getDate());
-            ps.setString(5, tran.getAmount());
-            ps.setString(6, tran.getDescription());
-            ps.setString(7, String.valueOf(tran.getCredit()));
-            ps.setString(8, String.valueOf(tran.getCreditPaid()));
-            ps.setString(9, tran.getCreditCard());
+            ps.setString(5, tran.getStore());
+            ps.setString(6, tran.getAmount());
+            ps.setString(7, tran.getDescription());
+            ps.setString(8, String.valueOf(tran.getCredit()));
+            ps.setString(9, String.valueOf(tran.getCreditPaid()));
+            ps.setString(10, tran.getCreditCard());
             ps.executeUpdate();
 
             if(tran.getCategory().equals(ApplicationLiterals.SAVINGS) ||

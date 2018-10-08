@@ -4,6 +4,7 @@ import beans.Account;
 import literals.Icons;
 import org.apache.log4j.Logger;
 import persistence.accounts.AccountData;
+import utilities.StringUtility;
 import utilities.exceptions.AppException;
 import views.common.MainMenu;
 import views.common.components.HintPassField;
@@ -81,21 +82,21 @@ public class InsertAccount {
 
         insert.addActionListener(e -> {
             // Verify account name field is not blank
-            if (accountField.getText().trim().equals("")) {
+            if (StringUtility.isEmpty(accountField.getText())) {
                 missingField.setText("Accounts name cannot be blank");
                 missingField.setVisible(true);
                 frame.pack();
             }
 
             // verify username field is not blank
-            else if (usernameField.getText().trim().equals("")) {
+            else if (StringUtility.isEmpty(usernameField.getText())) {
                 missingField.setText("Username cannot be blank");
                 missingField.setVisible(true);
                 frame.pack();
             }
 
             // verify password field is not blank
-            else if (new String(passField.getPassword()).trim().equals("")) {
+            else if (StringUtility.isEmpty(new String(passField.getPassword()))) {
                 missingField.setText("Password cannot be blank");
                 missingField.setVisible(true);
                 frame.pack();
@@ -114,8 +115,7 @@ public class InsertAccount {
                 Account account = new Account();
                 account.setAccount(accountField.getText().trim());
                 account.setUsername(usernameField.getText().trim());
-                account.setPassword(new String(passField.getPassword())
-                        .trim());
+                account.setPassword(new String(passField.getPassword()).trim());
                 account.setUrl(urlField.getText().trim());
                 int recordCount;
                 try {
@@ -126,8 +126,7 @@ public class InsertAccount {
                 }
 
                 if (recordCount != 1) {
-                    missingField
-                            .setText("Error inserting new account - check database");
+                    missingField.setText("Error inserting new account - check database");
                     logger.error("Error inserting new account - check database");
                     missingField.setVisible(true);
                     frame.pack();
