@@ -131,7 +131,7 @@ public class ReminderData {
     }
 
     public static Object[][] getDismissedReminders() {
-        Object[][] records = new Object[getTotalDismissedReminders()][2];
+        Object[][] records = new Object[getTotalDismissedReminders()][3];
         String SQL_TEXT = "SELECT * FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT + Views.DISMISSED_REMINDERS;
         try {
             Connection con = Connect.getConnection();
@@ -141,6 +141,7 @@ public class ReminderData {
             while (rs.next()) {
                 records[recordCount][0] = rs.getString(1);
                 records[recordCount][1] = rs.getString(2);
+                records[recordCount][2] = rs.getString(3);
                 recordCount++;
             }
         } catch (SQLException e1) {
