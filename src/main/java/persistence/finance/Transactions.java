@@ -85,8 +85,9 @@ public class Transactions {
     }
 
     public static Transaction getSpecifiedTransaction(String tranId) {
-        String SQL_TEXT = "SELECT TRANSACTION_ID, TITLE, TYPE, CATEGORY, TRANSACTION_DATE, AMOUNT, DESCRIPTION, CREDIT, CREDIT_PAID, CARD_USED "
-                + "FROM " + Databases.FINANCIAL + ApplicationLiterals.DOT
+        String SQL_TEXT = "SELECT TRANSACTION_ID, TITLE, TYPE, CATEGORY, TRANSACTION_DATE, AMOUNT, DESCRIPTION, STORE, " +
+                "CREDIT, CREDIT_PAID, CARD_USED FROM "
+                + Databases.FINANCIAL + ApplicationLiterals.DOT
                 + Tables.MONTHLY_TRANSACTIONS + " WHERE TRANSACTION_ID = " + tranId;
         Statement statement;
         ResultSet rs;
@@ -103,9 +104,10 @@ public class Transactions {
                 tran.setDate(rs.getString(5));
                 tran.setAmount(rs.getString(6));
                 tran.setDescription(rs.getString(7));
-                tran.setCredit(rs.getString(8).charAt(0));
-                tran.setCreditPaid(rs.getString(9).charAt(0));
-                tran.setCreditCard(rs.getString(10));
+                tran.setStore(rs.getString(8));
+                tran.setCredit(rs.getString(9).charAt(0));
+                tran.setCreditPaid(rs.getString(10).charAt(0));
+                tran.setCreditCard(rs.getString(11));
             }
             con.close();
         } catch (StringIndexOutOfBoundsException e) {

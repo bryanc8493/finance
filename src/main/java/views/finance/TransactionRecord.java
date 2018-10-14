@@ -16,21 +16,22 @@ public class TransactionRecord {
     private JTextField date = new JTextField();
     private JTextField amount = new JTextField();
     private JTextField description = new JTextField();
+    private JTextField store = new JTextField();
     private JTextField credit = new JTextField();
     private JTextField creditPaid = new JTextField();
     private JTextField cardUsed = new JTextField();
 
     public TransactionRecord(Transaction selectedTran) {
-
         final JFrame frame = new JFrame("Selected Transaction");
 
-        JLabel tranIDLabel = new JLabel("Transactions ID:                   ");
+        JLabel tranIDLabel = new JLabel("Transaction ID:                   ");
         JLabel titleLabel = new JLabel("Title:");
         JLabel typeLabel = new JLabel("Type:");
         JLabel categoryLabel = new JLabel("Category:");
         JLabel dateLabel = new JLabel("Date:");
         JLabel amountLabel = new JLabel("Amount:");
         JLabel descriptionLabel = new JLabel("Description:");
+        JLabel storeLabel = new JLabel("Store:");
         JLabel creditLabel = new JLabel("Credit");
         JLabel creditPaidLabel = new JLabel("Credit Paid:");
         JLabel cardUsedLabel = new JLabel("Credit Card:");
@@ -43,7 +44,7 @@ public class TransactionRecord {
 
         setValues(selectedTran);
 
-        JPanel content = new JPanel(new GridLayout(10, 2, 5, 5));
+        JPanel content = new JPanel(new GridLayout(11, 2, 5, 5));
         content.add(tranIDLabel);
         content.add(tranID);
         content.add(titleLabel);
@@ -58,6 +59,8 @@ public class TransactionRecord {
         content.add(amount);
         content.add(descriptionLabel);
         content.add(description);
+        content.add(storeLabel);
+        content.add(store);
         content.add(creditLabel);
         content.add(credit);
         content.add(creditPaidLabel);
@@ -91,6 +94,7 @@ public class TransactionRecord {
         date.setText(selectedTran.getDate());
         amount.setText(selectedTran.getAmount());
         description.setText(selectedTran.getDescription());
+        store.setText(selectedTran.getStore());
         credit.setText(setCreditText(selectedTran.getCredit()));
         creditPaid.setText(setCreditText(selectedTran.getCreditPaid()));
         cardUsed.setText(selectedTran.getCreditCard());
@@ -102,6 +106,7 @@ public class TransactionRecord {
         date.setEditable(false);
         amount.setEditable(false);
         description.setEditable(false);
+        store.setEditable(false);
         credit.setEditable(false);
         creditPaid.setEditable(false);
         cardUsed.setEditable(false);
