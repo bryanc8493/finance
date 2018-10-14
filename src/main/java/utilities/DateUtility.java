@@ -9,6 +9,7 @@ import utilities.exceptions.AppException;
 
 import java.io.File;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -61,5 +62,20 @@ public class DateUtility {
         model.setValue(new Date());
         model.setSelected(true);
         return datePicker;
+    }
+
+    private static int getCurrentYear() {
+        return Integer.valueOf(ApplicationLiterals.YEAR.format(new Date()));
+    }
+
+    private static int getCurrentMonth() {
+        return Integer.valueOf(ApplicationLiterals.MONTH.format(new Date()));
+    }
+
+    public static boolean isValidReportMonth(int year, int month) {
+        LocalDate selectedDate = LocalDate.of(year, month, 1);
+        LocalDate currentDate = LocalDate.of(getCurrentYear(), getCurrentMonth(), 1);
+
+        return selectedDate.isBefore(currentDate);
     }
 }
