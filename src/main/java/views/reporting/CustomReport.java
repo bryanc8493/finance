@@ -13,6 +13,7 @@ import persistence.reporting.GenerateReport;
 import program.PersonalFinance;
 import reporting.WriteReport;
 import utilities.DateLabelFormatter;
+import utilities.DateUtility;
 import utilities.ReadConfig;
 import utilities.exceptions.AppException;
 import views.common.MainMenu;
@@ -287,7 +288,14 @@ public class CustomReport {
             int month = (int) months.getSelectedItem();
             logger.info("Running monthly report for: " + month + "/" + year);
 
-            GenerateReport.createMonthlyReport(year, month);
+            if (DateUtility.isValidReportMonth(year, month)) {
+                GenerateReport.createMonthlyReport(year, month);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Cannot run report for current month or future months!",
+                        "Invalid Month Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         } else {
             Date selectedBeginDate = (Date) datePicker.getModel().getValue();
             String startDate = ApplicationLiterals.YEAR_MONTH_DAY
