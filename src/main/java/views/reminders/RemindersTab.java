@@ -3,6 +3,7 @@ package views.reminders;
 import beans.Reminder;
 import literals.ApplicationLiterals;
 import literals.Icons;
+import literals.enums.ReminderType;
 import org.apache.log4j.Logger;
 import persistence.reminders.ReminderData;
 import views.common.Loading;
@@ -23,9 +24,11 @@ import java.awt.event.MouseEvent;
 public class RemindersTab extends JPanel {
 
     private Logger log = Logger.getLogger(RemindersTab.class);
-    private JScrollPane activeTable = getActiveReminderData("ACTIVE");
-    private JScrollPane futureTable = getActiveReminderData("FUTURE");
-    private JScrollPane dismissedTable = getActiveReminderData("DISMISSED");
+    private JScrollPane activeTable = getActiveReminderData(ReminderType.ACTIVE);
+    private JScrollPane futureTable = getActiveReminderData(ReminderType.FUTURE);
+    private JScrollPane dismissedTable = getActiveReminderData(ReminderType.DISMISSED);
+
+    private JLabel noReminders;
 
     public RemindersTab() {
         log.debug("Initializing and populating Reminders Tab");
@@ -36,7 +39,7 @@ public class RemindersTab extends JPanel {
 
         JLabel title = new Title("Reminders");
 
-        JLabel noReminders = new JLabel("You currently have no reminders!", JLabel.CENTER);
+        noReminders = new JLabel("You currently have no reminders!", JLabel.CENTER);
         noReminders.setFont(ApplicationLiterals.APP_FONT);
 
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -47,7 +50,6 @@ public class RemindersTab extends JPanel {
         TabButton active = new TabButton("   Active   ");
         TabButton future = new TabButton("   Future   ");
         TabButton dismissed = new TabButton("   Dismissed   ");
-        setActiveTab(active);
 
         JPanel tabs = new JPanel(new FlowLayout(FlowLayout.CENTER, 30,10));
         tabs.add(active);
@@ -64,11 +66,7 @@ public class RemindersTab extends JPanel {
         JPanel content = new JPanel(new BorderLayout());
         content.add(buttons, BorderLayout.NORTH);
         content.add(tabs, BorderLayout.CENTER);
-        if (ReminderData.getTotalNonDismissedReminders() == 0) {
-            content.add(noReminders, BorderLayout.SOUTH);
-        } else {
-            content.add(tables, BorderLayout.SOUTH);
-        }
+        content.add(tables, BorderLayout.SOUTH);
         content.setBorder(BorderFactory.createEmptyBorder(0,25,0,25));
 
         this.setLayout(new BorderLayout(10, 10));
@@ -124,20 +122,16 @@ public class RemindersTab extends JPanel {
         tabTwo.setBorder(ApplicationLiterals.TAB_BORDER);
     }
 
-    private JScrollPane getActiveReminderData(String dataType) {
+    private JScrollPane getActiveReminderData(ReminderType dataType) {
         Object[] columnNames = { "Id", "Reminder Text", "Reminder Date" };
         Object[][] records;
 
-        switch (dataType) {
-            case "ACTIVE":
-                records = ReminderData.getActiveReminders();
-                break;
-            case "FUTURE":
-                records = ReminderData.getFutureReminders();
-                break;
-            default:
-                records = ReminderData.getDismissedReminders();
-                break;
+        if (dataType == ReminderType.ACTIVE) {
+            records = ReminderData.getActiveReminders();
+        } else if (dataType == ReminderType.FUTURE) {
+            records = ReminderData.getFutureReminders();
+        } else {
+            records = ReminderData.getDismissedReminders();
         }
 
         DefaultTableModel model = new DefaultTableModel(records, columnNames) {
