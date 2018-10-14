@@ -88,21 +88,6 @@ public class ReminderData {
         }
     }
 
-    public static int getTotalNonDismissedReminders() {
-        String SQL_TEXT = "SELECT COUNT(*) FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT
-                + Tables.REMINDERS + " WHERE DISMISSED = 'F'";
-
-        try {
-            Connection con = Connect.getConnection();
-            Statement statement = con.createStatement();
-            ResultSet rs = statement.executeQuery(SQL_TEXT);
-            rs.next();
-            return rs.getInt(1);
-        } catch (Exception e) {
-            throw new AppException(e);
-        }
-    }
-
     public static Object[][] getActiveReminders() {
         Object[][] records = new Object[getTotalActiveReminders()][3];
         String SQL_TEXT = "SELECT * FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT + Views.ACTIVE_REMINDERS;

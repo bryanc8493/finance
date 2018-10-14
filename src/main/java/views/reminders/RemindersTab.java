@@ -28,6 +28,8 @@ public class RemindersTab extends JPanel {
     private JScrollPane futureTable = getActiveReminderData(ReminderType.FUTURE);
     private JScrollPane dismissedTable = getActiveReminderData(ReminderType.DISMISSED);
 
+    private int activeReminderCount;
+
     private JLabel noReminders;
 
     public RemindersTab() {
@@ -45,6 +47,7 @@ public class RemindersTab extends JPanel {
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttons.add(add);
         buttons.add(edit);
+        edit.setEnabled(activeReminderCount > 0);
         buttons.setBorder(BorderFactory.createEmptyBorder(0,0,30,0));
 
         TabButton active = new TabButton("   Active   ");
@@ -128,6 +131,7 @@ public class RemindersTab extends JPanel {
 
         if (dataType == ReminderType.ACTIVE) {
             records = ReminderData.getActiveReminders();
+            activeReminderCount = records.length;
         } else if (dataType == ReminderType.FUTURE) {
             records = ReminderData.getFutureReminders();
         } else {
