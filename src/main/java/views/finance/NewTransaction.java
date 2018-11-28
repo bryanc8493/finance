@@ -93,7 +93,7 @@ public class NewTransaction {
         top.add(details);
         top.add(typeAndCategory);
 
-        JPanel creditCardSelection = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
+        JPanel creditCardSelection = new JPanel(new GridLayout(determineRows(creditCards.size()),2,5,5));
         ButtonGroup group = new ButtonGroup();
         for(String card : creditCards) {
             JRadioButton radio = new JRadioButton(card);
@@ -277,6 +277,11 @@ public class NewTransaction {
                 resetDefaults();
             }
         });
+    }
+
+    private static int determineRows(int totalCreditCards) {
+        int remainder = totalCreditCards % 2;
+        return (totalCreditCards/2) + remainder;
     }
 
     private static String getSelectedCreditCard() {
