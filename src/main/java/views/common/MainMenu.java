@@ -13,10 +13,7 @@ import views.common.components.MultiLabelButton;
 import utilities.ReadConfig;
 import views.common.components.ApplicationControl;
 import views.common.components.Title;
-import views.finance.ModifyRecords;
-import views.finance.NewTransaction;
-import views.finance.TransactionRecord;
-import views.finance.UnpaidCreditList;
+import views.finance.*;
 import views.investments.InvestmentTab;
 import views.reminders.RemindersTab;
 import views.reporting.CustomReport;
@@ -73,12 +70,6 @@ public class MainMenu {
         Loading.update("Gathering last " + entriesToRetrieve + " entries", 45);
         Object[][] previousRecords = Transactions.getPastEntries(entriesToRetrieve);
         Object[] columnNames = { "ID", "TITLE", "TYPE", "DATE", "AMOUNT", "STORE" };
-        final JTable table = new JTable(previousRecords, columnNames);
-        final JScrollPane entriesScrollPane = new JScrollPane(table);
-        entriesScrollPane.setViewportView(table);
-        entriesScrollPane.setVisible(true);
-        Dimension d = table.getPreferredSize();
-        entriesScrollPane.setPreferredSize(new Dimension(d.width * 2, table.getRowHeight() * 15));
 
         Loading.update("Looking for future payments", 54);
         String futurePayments = BalanceData.getFuturePayments();
@@ -214,19 +205,7 @@ public class MainMenu {
             CustomReport.selectReport();
         });
 
-        lastRecords.addActionListener(e -> {
-            logger.debug("Displaying last " + viewingAmount + " records");
-            JFrame f = new JFrame("Past " + viewingAmount + " Records");
-            f.setIconImage(appIcon.getImage());
-            JPanel p = new JPanel(new BorderLayout(10, 0));
-            JLabel label = new Title("Last " + viewingAmount + " Transactions");
-            p.add(label, BorderLayout.NORTH);
-            p.add(entriesScrollPane, BorderLayout.SOUTH);
-            f.add(p);
-            f.pack();
-            f.setVisible(true);
-            f.setLocationRelativeTo(null);
-        });
+        lastRecords.addActionListener(e -> new LatestRecordsList(viewingAmount, new JTable(previousRecords, columnNames)));
 
         futureBalBtn.addActionListener(e -> {
             logger.debug("Displaying future transaction records");
