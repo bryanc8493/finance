@@ -151,4 +151,18 @@ public class BalanceData {
             throw new AppException(e);
         }
     }
+
+    public static Double getOutstandingCredit(String card) {
+        String sql = "SELECT SUM(AMOUNT) FROM " + Databases.FINANCIAL + ApplicationLiterals.DOT
+                + Views.UNPAID_CREDITS_LIST + " WHERE UPPER(CARD_USED) = '" + card.toUpperCase() + "'";
+        try {
+            Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            rs.next();
+            return (rs.getDouble(1));
+        } catch (SQLException e) {
+            throw new AppException(e);
+        }
+    }
 }

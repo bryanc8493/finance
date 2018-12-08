@@ -8,6 +8,7 @@ import org.jdatepicker.impl.JDatePickerImpl;
 import persistence.Connect;
 import persistence.finance.Transactions;
 import program.PersonalFinance;
+import utilities.CommonConfigValues;
 import utilities.DateUtility;
 import utilities.ReadConfig;
 import utilities.exceptions.AppException;
@@ -60,7 +61,7 @@ public class NewTransaction {
         amountField.setFont(ApplicationLiterals.APP_FONT);
 
         creditCardRadios = new LinkedHashSet<>();
-        final Set<String> creditCards = getCreditCards();
+        final Set<String> creditCards = CommonConfigValues.getCreditCards();
 
         final JCheckBox credit = new JCheckBox("  Credit");
 
@@ -300,13 +301,6 @@ public class NewTransaction {
         descField.setText(ApplicationLiterals.EMPTY);
         storeField.setText(ApplicationLiterals.EMPTY);
         titleField.requestFocusInWindow();
-    }
-
-    private static Set<String> getCreditCards() {
-        String cardsString = ReadConfig.getConfigValue(ApplicationLiterals.CREDIT_CARDS);
-        String[] values = cardsString.split(ApplicationLiterals.COMMA);
-
-        return new HashSet<>(Arrays.asList(values));
     }
 
     private static String[] getCategories(String type) {
