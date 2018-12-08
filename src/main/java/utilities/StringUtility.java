@@ -17,4 +17,8 @@ public class StringUtility {
         NumberFormat numberFormat = ApplicationLiterals.getNumberFormat();
         return "$ " + numberFormat.format(input);
     }
+
+    public static String formatAsCurrency(String input) {
+        return "$ " + input;
+    }
 }
