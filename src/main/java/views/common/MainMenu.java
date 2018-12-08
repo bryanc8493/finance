@@ -7,15 +7,13 @@ import org.apache.log4j.Logger;
 import persistence.Connect;
 import persistence.finance.BalanceData;
 import persistence.finance.Transactions;
+import utilities.StringUtility;
 import views.accounts.AccountTab;
 import views.address.AddressTab;
 import views.common.components.MultiLabelButton;
 import utilities.ReadConfig;
 import views.common.components.ApplicationControl;
-import views.common.components.Title;
-import views.finance.ModifyRecords;
-import views.finance.NewTransaction;
-import views.finance.TransactionRecord;
+import views.finance.*;
 import views.investments.InvestmentTab;
 import views.reminders.RemindersTab;
 import views.reporting.CustomReport;
@@ -72,12 +70,6 @@ public class MainMenu {
         Loading.update("Gathering last " + entriesToRetrieve + " entries", 45);
         Object[][] previousRecords = Transactions.getPastEntries(entriesToRetrieve);
         Object[] columnNames = { "ID", "TITLE", "TYPE", "DATE", "AMOUNT", "STORE" };
-        final JTable table = new JTable(previousRecords, columnNames);
-        final JScrollPane entriesScrollPane = new JScrollPane(table);
-        entriesScrollPane.setViewportView(table);
-        entriesScrollPane.setVisible(true);
-        Dimension d = table.getPreferredSize();
-        entriesScrollPane.setPreferredSize(new Dimension(d.width * 2, table.getRowHeight() * 15));
 
         Loading.update("Looking for future payments", 54);
         String futurePayments = BalanceData.getFuturePayments();
@@ -124,13 +116,13 @@ public class MainMenu {
 
         JPanel grid = new JPanel(new GridLayout(3, 3));
         grid.add(new JLabel("Available Balance:"));
-        grid.add(new JLabel("$ " + amount));
+        grid.add(new JLabel(StringUtility.formatAsCurrency(amount)));
         grid.add(new JLabel());
         grid.add(new JLabel("Future Balance:"));
-        grid.add(new JLabel("$ " + futureBalance));
+        grid.add(new JLabel(StringUtility.formatAsCurrency(futureBalance)));
         grid.add(futureBalBtn);
         grid.add(new JLabel("Balance (- Credits):"));
-        grid.add(new JLabel("$ " + trueBalance));
+        grid.add(new JLabel(StringUtility.formatAsCurrency(trueBalance)));
         grid.add(creditBalBtn);
         grid.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 20));
 
@@ -213,79 +205,15 @@ public class MainMenu {
             CustomReport.selectReport();
         });
 
-        lastRecords.addActionListener(e -> {
-            logger.debug("Displaying last " + viewingAmount + " records");
-            JFrame f = new JFrame("Past " + viewingAmount + " Records");
-            f.setIconImage(appIcon.getImage());
-            JPanel p = new JPanel(new BorderLayout(10, 0));
-            JLabel label = new Title("Last " + viewingAmount + " Transactions");
-            p.add(label, BorderLayout.NORTH);
-            p.add(entriesScrollPane, BorderLayout.SOUTH);
-            f.add(p);
-            f.pack();
-            f.setVisible(true);
-            f.setLocationRelativeTo(null);
-        });
+        lastRecords.addActionListener(e -> new LatestRecordsList(viewingAmount, new JTable(previousRecords, columnNames)));
 
-        futureBalBtn.addActionListener(e -> {
-            logger.debug("Displaying future transaction records");
-            JFrame f = new JFrame("Future Transactions");
-            JPanel p = new JPanel(new BorderLayout(10, 0));
-            JLabel label = new Title("Future Transactions");
-            p.add(label, BorderLayout.NORTH);
-            p.add(getFutureRecordsPane(), BorderLayout.SOUTH);
-            f.add(p);
-            f.setIconImage(Icons.APP_ICON.getImage());
-            f.pack();
-            f.setVisible(true);
-            f.setLocationRelativeTo(null);
-        });
+        futureBalBtn.addActionListener(e -> new FutureBalanceList());
 
-        creditBalBtn.addActionListener(e -> {
-            logger.debug("Displaying unpaid credit records");
-            JFrame f = new JFrame("Unpaid Credits");
-            JPanel p = new JPanel(new BorderLayout(10, 0));
-            JLabel label = new Title("Unpaid Credit Card Transactions");
-            p.add(label, BorderLayout.NORTH);
-            p.add(getCreditRecordsPane(), BorderLayout.SOUTH);
-            f.add(p);
-            f.setIconImage(Icons.APP_ICON.getImage());
-            f.pack();
-            f.setVisible(true);
-            f.setLocationRelativeTo(null);
-        });
+        creditBalBtn.addActionListener(e -> new UnpaidCreditList());
     }
 
     public static void closeWindow() {
         frame.dispose();
-    }
-
-    private static JScrollPane getFutureRecordsPane() {
-        Object[] columns = { "Title", "Type", "Category", "Transaction_Date", "Amount" };
-
-        JTable table = new JTable(Transactions.getFutureRecords(), columns);
-        JScrollPane sp = new JScrollPane(table);
-        sp.setViewportView(table);
-        sp.setVisible(true);
-        Dimension d = table.getPreferredSize();
-        sp.setPreferredSize(new Dimension((d.width * 2) - 150, table
-                .getRowHeight() * 10));
-
-        return sp;
-    }
-
-    private static JScrollPane getCreditRecordsPane() {
-        Object[] columns = { "Title", "Category", "Date", "Amount", "Card Used" };
-
-        JTable table = new JTable(Transactions.getUnpaidCreditRecords(), columns);
-        JScrollPane sp = new JScrollPane(table);
-        sp.setViewportView(table);
-        sp.setVisible(true);
-        Dimension d = table.getPreferredSize();
-        sp.setPreferredSize(new Dimension(d.width * 2,
-                table.getRowHeight() * 15));
-
-        return sp;
     }
 
     private static JScrollPane getLatestRecordsPane(int entries) {
