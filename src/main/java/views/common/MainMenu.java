@@ -16,6 +16,7 @@ import views.common.components.Title;
 import views.finance.ModifyRecords;
 import views.finance.NewTransaction;
 import views.finance.TransactionRecord;
+import views.finance.UnpaidCreditList;
 import views.investments.InvestmentTab;
 import views.reminders.RemindersTab;
 import views.reporting.CustomReport;
@@ -241,19 +242,7 @@ public class MainMenu {
             f.setLocationRelativeTo(null);
         });
 
-        creditBalBtn.addActionListener(e -> {
-            logger.debug("Displaying unpaid credit records");
-            JFrame f = new JFrame("Unpaid Credits");
-            JPanel p = new JPanel(new BorderLayout(10, 0));
-            JLabel label = new Title("Unpaid Credit Card Transactions");
-            p.add(label, BorderLayout.NORTH);
-            p.add(getCreditRecordsPane(), BorderLayout.SOUTH);
-            f.add(p);
-            f.setIconImage(Icons.APP_ICON.getImage());
-            f.pack();
-            f.setVisible(true);
-            f.setLocationRelativeTo(null);
-        });
+        creditBalBtn.addActionListener(e -> new UnpaidCreditList());
     }
 
     public static void closeWindow() {
@@ -270,20 +259,6 @@ public class MainMenu {
         Dimension d = table.getPreferredSize();
         sp.setPreferredSize(new Dimension((d.width * 2) - 150, table
                 .getRowHeight() * 10));
-
-        return sp;
-    }
-
-    private static JScrollPane getCreditRecordsPane() {
-        Object[] columns = { "Title", "Category", "Date", "Amount", "Card Used" };
-
-        JTable table = new JTable(Transactions.getUnpaidCreditRecords(), columns);
-        JScrollPane sp = new JScrollPane(table);
-        sp.setViewportView(table);
-        sp.setVisible(true);
-        Dimension d = table.getPreferredSize();
-        sp.setPreferredSize(new Dimension(d.width * 2,
-                table.getRowHeight() * 15));
 
         return sp;
     }
