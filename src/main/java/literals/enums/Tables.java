@@ -13,5 +13,6 @@ public enum Tables {
 	REMINDERS,
 	SAVINGS,
 	SITES, 
-	USERS
+	USERS,
+	USER_SETTINGS
 }

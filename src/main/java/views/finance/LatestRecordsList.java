@@ -12,7 +12,7 @@ public class LatestRecordsList {
 
     private Logger logger = Logger.getLogger(LatestRecordsList.class);
 
-    public LatestRecordsList(String viewingAmount, JTable table) {
+    public LatestRecordsList(Integer viewingAmount, JTable table) {
         logger.debug("Displaying last " + viewingAmount + " records");
 
         JFrame frame = new JFrame("Past " + viewingAmount + " Records");

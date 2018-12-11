@@ -1,6 +1,7 @@
 package views.common;
 
 import domain.beans.Transaction;
+import domain.beans.UserSettings;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;
@@ -8,6 +9,7 @@ import persistence.Connect;
 import persistence.finance.BalanceData;
 import persistence.finance.Transactions;
 import utilities.StringUtility;
+import utilities.settings.SettingsService;
 import views.accounts.AccountTab;
 import views.address.AddressTab;
 import views.common.components.MultiLabelButton;
@@ -33,15 +35,16 @@ public class MainMenu {
     private static Logger logger = Logger.getLogger(MainMenu.class);
     private static NumberFormat decimal = ApplicationLiterals.getNumberFormat();
     private static JFrame frame;
+    private static UserSettings settings;
 
     private static boolean isFutureBalancePositive = false;
 
     public static void modeSelection(int persistedTab) {
         logger.debug("Initializing and generating main menu GUI...");
+
+        settings = SettingsService.getCurrentUserSettings();
         Loading.update("Initializing main menu", 27);
         frame = new JFrame("Finance Utility");
-
-        String viewingAmount = ReadConfig.getConfigValue(ApplicationLiterals.VIEWING_AMOUNT_MAX);
 
         final JButton insert = new MultiLabelButton("New",
                 MultiLabelButton.BOTTOM, Icons.INSERT_ICON);
@@ -50,7 +53,7 @@ public class MainMenu {
         final JButton report = new MultiLabelButton("Reporting",
                 MultiLabelButton.BOTTOM, Icons.REPORT_ICON);
         final JButton lastRecords = new MultiLabelButton("Last "
-                + viewingAmount, MultiLabelButton.BOTTOM, Icons.QUERY_ICON);
+                + settings.getViewingRecords(), MultiLabelButton.BOTTOM, Icons.QUERY_ICON);
 
         // Get current balance as of current date and time
         Loading.update("Determining account balances", 36);
@@ -205,7 +208,7 @@ public class MainMenu {
             CustomReport.selectReport();
         });
 
-        lastRecords.addActionListener(e -> new LatestRecordsList(viewingAmount, new JTable(previousRecords, columnNames)));
+        lastRecords.addActionListener(e -> new LatestRecordsList(settings.getViewingRecords(), new JTable(previousRecords, columnNames)));
 
         futureBalBtn.addActionListener(e -> new FutureBalanceList());
 
