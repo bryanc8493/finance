@@ -1,8 +1,8 @@
 package persistence.accounts;
 
-import beans.Account;
-import beans.UpdatedRecord;
-import beans.User;
+import domain.beans.Account;
+import domain.beans.UpdatedRecord;
+import domain.dto.User;
 import literals.ApplicationLiterals;
 import literals.enums.Databases;
 import literals.enums.Tables;

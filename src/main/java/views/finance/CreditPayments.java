@@ -1,6 +1,6 @@
 package views.finance;
 
-import beans.Transaction;
+import domain.beans.Transaction;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import literals.enums.Databases;

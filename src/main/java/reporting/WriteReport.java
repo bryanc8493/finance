@@ -1,6 +1,6 @@
 package reporting;
 
-import beans.ReportRecord;
+import domain.beans.ReportRecord;
 import literals.ApplicationLiterals;
 import org.apache.log4j.Logger;
 import utilities.ReadConfig;

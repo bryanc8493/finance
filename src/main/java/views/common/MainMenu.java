@@ -1,6 +1,6 @@
 package views.common;
 
-import beans.Transaction;
+import domain.beans.Transaction;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;

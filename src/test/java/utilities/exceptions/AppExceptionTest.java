@@ -1,4 +1,4 @@
-package utilities;
+package utilities.exceptions;
 
 import org.junit.Test;
 import utilities.exceptions.AppException;

@@ -1,7 +1,7 @@
 package views.reporting;
 
-import beans.CategorySummary;
-import beans.ReportRecord;
+import domain.dto.CategorySummary;
+import domain.beans.ReportRecord;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;

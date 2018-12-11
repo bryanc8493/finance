@@ -1,8 +1,8 @@
 package persistence.finance;
 
-import beans.MonthlyRecord;
-import beans.Transaction;
-import beans.UpdatedRecord;
+import domain.dto.MonthlyRecord;
+import domain.beans.Transaction;
+import domain.beans.UpdatedRecord;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import literals.ApplicationLiterals;
 import literals.enums.Databases;

@@ -1,6 +1,6 @@
 package views.accounts;
 
-import beans.User;
+import domain.dto.User;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;

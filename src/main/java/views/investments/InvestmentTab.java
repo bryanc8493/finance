@@ -1,6 +1,6 @@
 package views.investments;
 
-import beans.InvestmentTrend;
+import domain.dto.InvestmentTrend;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import literals.enums.InvestmentAccount;

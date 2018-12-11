@@ -1,8 +1,8 @@
 package persistence.reporting;
 
-import beans.CategorySummary;
-import beans.MonthlyRecord;
-import beans.ReportRecord;
+import domain.dto.CategorySummary;
+import domain.dto.MonthlyRecord;
+import domain.beans.ReportRecord;
 import literals.ApplicationLiterals;
 import literals.enums.Tables;
 import org.apache.log4j.Logger;

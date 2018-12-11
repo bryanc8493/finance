@@ -1,4 +1,4 @@
-package beans;
+package domain.dto;
 
 public class SalaryConfiguration {
 

@@ -1,4 +1,4 @@
-package beans;
+package domain.dto;
 
 import java.util.Date;
 

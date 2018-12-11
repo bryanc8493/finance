@@ -1,6 +1,6 @@
 package views.address;
 
-import beans.Address;
+import domain.beans.Address;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;

@@ -1,6 +1,6 @@
 package views.finance;
 
-import beans.Transaction;
+import domain.beans.Transaction;
 import literals.Icons;
 import views.common.components.PrimaryButton;
 

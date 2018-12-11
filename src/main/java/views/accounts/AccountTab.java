@@ -1,6 +1,6 @@
 package views.accounts;
 
-import beans.UpdatedRecord;
+import domain.beans.UpdatedRecord;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;
