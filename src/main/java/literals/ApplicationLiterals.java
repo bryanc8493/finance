@@ -87,10 +87,6 @@ public abstract class ApplicationLiterals {
 	public static final String DB_PORT = "DBPort";
 	public static final String MY_SQL_DIR = "MySQLDirectory";
 	public static final String MY_SQL_BACKUP = "MySQLBackupLocation";
-	public static final String EXPENSE_CATEGORIES = "ExpenseCategories";
-	public static final String INCOME_CATEGORIES = "IncomeCategories";
-	public static final String SAVINGS_SAFE_AMT = "SavingsSafeAmount";
-	public static final String VIEWING_AMOUNT_MAX = "ViewingRecords";
 	public static final String HTML_TEMPLATE = "HTMLTemplateFile";
 	public static final String CHART_OUTPUT = "ChartOutputFile";
 	public static final String REPORTS_OUTPUT_DIR = "ReportsOutputDirectory";

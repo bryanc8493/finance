@@ -1,17 +1,16 @@
 package views.finance;
 
 import domain.beans.Transaction;
+import domain.beans.UserSettings;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;
 import org.jdatepicker.impl.JDatePickerImpl;
-import persistence.Connect;
 import persistence.finance.Transactions;
 import program.PersonalFinance;
 import utilities.CommonConfigValues;
 import utilities.DateUtility;
-import utilities.ReadConfig;
-import utilities.exceptions.AppException;
+import utilities.settings.SettingsService;
 import views.common.MainMenu;
 import views.common.components.HintTextField;
 import views.common.components.PrimaryButton;
@@ -20,15 +19,13 @@ import views.common.components.Title;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.*;
 
 public class NewTransaction {
 
     private static Logger logger = Logger.getLogger(NewTransaction.class);
-    private static String[] EXPENSE_CATEGORIES;
-    private static String[] INCOME_CATEGORIES;
+    private static String[] expenseCategories;
+    private static String[] incomeCategories;
     private static Set<JRadioButton> creditCardRadios;
     private static JComboBox<String> selectCategory = new JComboBox<>();
 
@@ -40,10 +37,12 @@ public class NewTransaction {
 
     public static void InsertFrame() {
         logger.debug("Displaying GUI to insert new transaction");
-        final Connection con = Connect.getConnection();
+        final UserSettings settings = SettingsService.getCurrentUserSettings();
 
-        EXPENSE_CATEGORIES = getCategories(ApplicationLiterals.EXPENSE);
-        INCOME_CATEGORIES = getCategories(ApplicationLiterals.INCOME);
+        Set<String> expenseCategoriesSet = settings.getExpenseCategories();
+        Set<String> incomeCategoriesSet = settings.getIncomeCategories();
+        expenseCategories = expenseCategoriesSet.toArray(new String[expenseCategoriesSet.size()]);
+        incomeCategories = incomeCategoriesSet.toArray(new String[incomeCategoriesSet.size()]);
         final String[] TYPE_CATEGORIES = { "Expense", "Income" };
 
         final JFrame frame = new JFrame(ApplicationLiterals.APP_TITLE);
@@ -154,13 +153,6 @@ public class NewTransaction {
 
         close.addActionListener(e -> {
             frame.dispose();
-            if (con != null) {
-                try {
-                    con.close();
-                } catch (SQLException e1) {
-                    throw new AppException(e1);
-                }
-            }
             logger.info("Closed by user");
             PersonalFinance.appLogger.logFooter();
             System.exit(0);
@@ -303,24 +295,10 @@ public class NewTransaction {
         titleField.requestFocusInWindow();
     }
 
-    private static String[] getCategories(String type) {
-        String rawExpCategories = ReadConfig.getConfigValue(ApplicationLiterals.EXPENSE_CATEGORIES);
-        String rawIncCategories = ReadConfig.getConfigValue(ApplicationLiterals.INCOME_CATEGORIES);
-
-        String categoryData = type.equals(ApplicationLiterals.EXPENSE) ? rawExpCategories : rawIncCategories;
-
-        String[] categories = categoryData.split(ApplicationLiterals.COMMA);
-        for (int i = 0; i < categories.length; i++) {
-            categories[i] = categories[i].trim();
-        }
-        return categories;
-    }
-
     private static void addCategories(boolean isExpenses) {
 
         selectCategory.removeAllItems();
-        String[] categories = isExpenses ? EXPENSE_CATEGORIES
-                : INCOME_CATEGORIES;
+        String[] categories = isExpenses ? expenseCategories : incomeCategories;
         for (String c : categories) {
             selectCategory.addItem(c);
         }

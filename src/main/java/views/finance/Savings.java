@@ -1,10 +1,10 @@
 package views.finance;
 
-import literals.ApplicationLiterals;
+import domain.beans.UserSettings;
 import literals.Icons;
 import org.apache.log4j.Logger;
 import persistence.finance.BalanceData;
-import utilities.ReadConfig;
+import utilities.settings.SettingsService;
 import views.common.components.PrimaryButton;
 import views.common.components.Title;
 
@@ -27,12 +27,15 @@ public class Savings {
     private JLabel safety = new JLabel();
     private JLabel house = new JLabel();
 
+    private UserSettings userSettings;
+
     private Locale locale = new Locale("en", "US");
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
 
     private final Logger logger = Logger.getLogger(Savings.class);
 
     public Savings() {
+        userSettings = SettingsService.getCurrentUserSettings();
         logger.debug("Displaying Savings account data");
         frame = new JFrame("Savings Summary");
 
@@ -72,8 +75,7 @@ public class Savings {
 
     private void setAmounts() {
         double totalSavings = BalanceData.getSavingsBalance();
-        String safetyString = ReadConfig.getConfigValue(ApplicationLiterals.SAVINGS_SAFE_AMT);
-        double safetyAmt = Double.parseDouble(safetyString);
+        double safetyAmt = userSettings.getSavingsSafetyAmount();
         double remainder = totalSavings - safetyAmt;
 
         total.setText(currencyFormatter.format(totalSavings));
