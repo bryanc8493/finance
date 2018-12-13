@@ -1,5 +1,6 @@
 package persistence.settings;
 
+import domain.beans.SystemSettings;
 import domain.beans.UserSettings;
 import literals.ApplicationLiterals;
 import literals.enums.Databases;
@@ -14,6 +15,24 @@ import java.sql.*;
 public class SettingsData {
 
     private static Logger logger = Logger.getLogger(SettingsData.class);
+
+    public static SystemSettings getSystemSettingsData() {
+        logger.debug("getting system settings");
+        String query = "SELECT * FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT
+                + Tables.SYSTEM_SETTINGS + " WHERE ID = '1'";
+
+        try {
+            Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+
+            SystemSettings settings = SettingsService.mapSystemSettings(rs);
+            con.close();
+            return settings;
+        } catch (SQLException e) {
+            throw new AppException(e);
+        }
+    }
 
     public static UserSettings getUserSettingsData(String user) {
         logger.debug("getting settings for user: " + user);

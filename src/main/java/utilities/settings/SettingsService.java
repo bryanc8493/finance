@@ -1,7 +1,7 @@
 package utilities.settings;
 
+import domain.beans.SystemSettings;
 import domain.beans.UserSettings;
-import literals.ApplicationLiterals;
 import persistence.Connect;
 import persistence.settings.SettingsData;
 import utilities.MapperUtil;
@@ -9,9 +9,6 @@ import utilities.exceptions.AppException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 public class SettingsService {
 
@@ -19,6 +16,10 @@ public class SettingsService {
         String user = Connect.getCurrentUser();
 
         return SettingsData.getUserSettingsData(user);
+    }
+
+    public static SystemSettings getSystemSettings() {
+        return SettingsData.getSystemSettingsData();
     }
 
     public static UserSettings mapUserSettings(ResultSet rs) {
@@ -36,6 +37,24 @@ public class SettingsService {
             settings.setTemplateFileLocation(rs.getString(10));
             settings.setChartOutputLocation(rs.getString(11));
             settings.setReportsOutputLocation(rs.getString(12));
+        } catch (SQLException e) {
+            throw new AppException(e);
+        }
+
+        return settings;
+    }
+
+    public static SystemSettings mapSystemSettings(ResultSet rs) {
+        SystemSettings settings = new SystemSettings();
+
+        try {
+            rs.next();
+            settings.setRootUser(rs.getString(2));
+            settings.setAdminUser(rs.getString(3));
+            settings.setReportTypes(MapperUtil.mapCommaSeparatedList(rs.getString(4)));
+            settings.setDeploymentLocation(rs.getString(5));
+            settings.setDevelopmentLocation(rs.getString(6));
+            settings.setDatabaseServerLocation(rs.getString(7));
         } catch (SQLException e) {
             throw new AppException(e);
         }
