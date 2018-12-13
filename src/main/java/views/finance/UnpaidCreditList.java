@@ -1,12 +1,13 @@
 package views.finance;
 
+import domain.beans.UserSettings;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;
 import persistence.finance.BalanceData;
 import persistence.finance.Transactions;
-import utilities.CommonConfigValues;
 import utilities.StringUtility;
+import utilities.settings.SettingsService;
 import views.common.components.Title;
 
 import javax.swing.*;
@@ -20,7 +21,11 @@ public class UnpaidCreditList {
     private Logger logger = Logger.getLogger(UnpaidCreditList.class);
     private Object[] columns = { "Title", "Category", "Date", "Amount", "Card Used" };
 
+    private UserSettings settings;
+
     public UnpaidCreditList() {
+        settings = SettingsService.getCurrentUserSettings();
+
         logger.debug("Displaying unpaid credit records");
 
         JFrame frame = new JFrame("Unpaid Credits");
@@ -51,7 +56,7 @@ public class UnpaidCreditList {
     }
 
     private JPanel generateCreditCardsSummaryPanel() {
-        Set<String> cards = CommonConfigValues.getCreditCards();
+        Set<String> cards = settings.getCreditCards();
         Map<String, Double> cardData = getCreditCardsSummary(cards);
 
         JPanel cardsPanel = new JPanel();

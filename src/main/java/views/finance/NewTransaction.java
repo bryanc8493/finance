@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.jdatepicker.impl.JDatePickerImpl;
 import persistence.finance.Transactions;
 import program.PersonalFinance;
-import utilities.CommonConfigValues;
 import utilities.DateUtility;
 import utilities.settings.SettingsService;
 import views.common.MainMenu;
@@ -35,7 +34,10 @@ public class NewTransaction {
     private final static JFormattedTextField amountField = new JFormattedTextField(
             ApplicationLiterals.getCurrencyFormat());
 
+    private static UserSettings settings;
+
     public static void InsertFrame() {
+        settings = SettingsService.getCurrentUserSettings();
         logger.debug("Displaying GUI to insert new transaction");
         final UserSettings settings = SettingsService.getCurrentUserSettings();
 
@@ -60,7 +62,7 @@ public class NewTransaction {
         amountField.setFont(ApplicationLiterals.APP_FONT);
 
         creditCardRadios = new LinkedHashSet<>();
-        final Set<String> creditCards = CommonConfigValues.getCreditCards();
+        final Set<String> creditCards = settings.getCreditCards();
 
         final JCheckBox credit = new JCheckBox("  Credit");
 

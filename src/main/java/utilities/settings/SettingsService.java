@@ -4,6 +4,7 @@ import domain.beans.UserSettings;
 import literals.ApplicationLiterals;
 import persistence.Connect;
 import persistence.settings.SettingsData;
+import utilities.MapperUtil;
 import utilities.exceptions.AppException;
 
 import java.sql.ResultSet;
@@ -26,12 +27,12 @@ public class SettingsService {
         try {
             rs.next();
             settings.setBackupLocation(rs.getString(3));
-            settings.setExpenseCategories(mapCommaSeparatedList(rs.getString(4)));
-            settings.setIncomeCategories(mapCommaSeparatedList(rs.getString(5)));
+            settings.setExpenseCategories(MapperUtil.mapCommaSeparatedList(rs.getString(4)));
+            settings.setIncomeCategories(MapperUtil.mapCommaSeparatedList(rs.getString(5)));
             settings.setSavingsSafetyAmount(rs.getDouble(6));
             settings.setViewingRecords(rs.getInt(7));
             settings.setDeploymentLocation(rs.getString(8));
-            settings.setCreditCards(mapCommaSeparatedList(rs.getString(9)));
+            settings.setCreditCards(MapperUtil.mapCommaSeparatedList(rs.getString(9)));
             settings.setTemplateFileLocation(rs.getString(10));
             settings.setChartOutputLocation(rs.getString(11));
             settings.setReportsOutputLocation(rs.getString(12));
@@ -40,11 +41,5 @@ public class SettingsService {
         }
 
         return settings;
-    }
-
-    private static Set<String> mapCommaSeparatedList(String rawCategory) {
-        String[] splitData = rawCategory.split(ApplicationLiterals.COMMA);
-
-        return new LinkedHashSet<>(Arrays.asList(splitData));
     }
 }

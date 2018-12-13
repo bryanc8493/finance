@@ -86,15 +86,10 @@ public abstract class ApplicationLiterals {
 	public static final String DB_PASS = "DBPassword";
 	public static final String DB_PORT = "DBPort";
 	public static final String MY_SQL_DIR = "MySQLDirectory";
-	public static final String MY_SQL_BACKUP = "MySQLBackupLocation";
-	public static final String HTML_TEMPLATE = "HTMLTemplateFile";
-	public static final String CHART_OUTPUT = "ChartOutputFile";
-	public static final String REPORTS_OUTPUT_DIR = "ReportsOutputDirectory";
 	public static final String REPORT_TYPES = "ReportTypes";
 	public static final String ADMINISTRATOR = "Administrator";
 	public static final String DEPLOYMENT_LOCATION = "DeploymentLocation";
 	public static final String LOCAL_DEVELOPMENT_DIRECTORY = "LocalDevelopmentDirectory";
-	public static final String CREDIT_CARDS = "CreditCards";
 
 	/*
 	 * Dates

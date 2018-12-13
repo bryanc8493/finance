@@ -1,12 +1,15 @@
 package views.tools;
 
+import domain.beans.UserSettings;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import literals.enums.Databases;
+import org.apache.log4j.Logger;
 import utilities.ReadConfig;
 import utilities.SystemUtility;
 import utilities.exceptions.AppException;
 import utilities.security.Encoding;
+import utilities.settings.SettingsService;
 import views.common.components.PrimaryButton;
 import views.common.components.Title;
 
@@ -20,10 +23,15 @@ import java.util.Date;
 
 public class Backup {
 
-    private final String BACKUP_DIR = ReadConfig.getConfigValue(ApplicationLiterals.MY_SQL_BACKUP);
+    private final Logger logger = Logger.getLogger(Backup.class);
+    private UserSettings settings;
+
     private final String MYSQL_DIR = ReadConfig.getConfigValue(ApplicationLiterals.MY_SQL_DIR);
 
     public Backup() {
+        logger.debug("showing backup modal");
+        settings = SettingsService.getCurrentUserSettings();
+
         final JFrame frame = new JFrame("Backup Status");
         JLabel title = new Title("Backup Status");
 
@@ -60,12 +68,12 @@ public class Backup {
 
         backup.addActionListener(e -> {
             frame.dispose();
-            performBackup(BACKUP_DIR);
+            performBackup(settings.getBackupLocation());
         });
     }
 
     private String getLastBackupTime(SimpleDateFormat returnFormat) {
-        File[] array = new File(BACKUP_DIR).listFiles();
+        File[] array = new File(settings.getBackupLocation()).listFiles();
         long lastBackupDate = 0;
 
         if (array == null || array.length == 0) {
@@ -132,7 +140,7 @@ public class Backup {
     }
 
     private int deleteOtherBackups() {
-        File[] files = new File(BACKUP_DIR).listFiles();
+        File[] files = new File(settings.getBackupLocation()).listFiles();
 
         int deletedBackups = 0;
         for (File f : files) {

@@ -1,11 +1,11 @@
 package views.settings;
 
+import domain.beans.UserSettings;
 import literals.ApplicationLiterals;
 import literals.Icons;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.log4j.Logger;
 import utilities.ReadConfig;
-import utilities.exceptions.AppException;
+import utilities.settings.SettingsService;
 import views.common.components.PrimaryButton;
 import views.common.components.Title;
 
@@ -15,6 +15,8 @@ import java.util.Map;
 
 public class DatabaseSettings {
 
+    private final Logger logger = Logger.getLogger(DatabaseSettings.class);
+
     private JTextField url = new JTextField(30);
     private JTextField mySqlClass = new JTextField(30);
     private JTextField username = new JTextField(30);
@@ -23,7 +25,11 @@ public class DatabaseSettings {
     private JTextField directory = new JTextField(30);
     private JTextField backup = new JTextField(30);
 
-    public DatabaseSettings(boolean isModifable) {
+    private UserSettings userSettings;
+
+    public DatabaseSettings(boolean isModifiable) {
+        logger.debug("Displaying database settings");
+        userSettings = SettingsService.getCurrentUserSettings();
         final JFrame frame = new JFrame("Database Settings");
 
         JLabel title = new Title("Current Database Settings");
@@ -67,7 +73,7 @@ public class DatabaseSettings {
 
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
         bottom.add(update);
-        update.setVisible(isModifable);
+        update.setVisible(isModifiable);
         bottom.add(close);
 
         JPanel main = new JPanel(new BorderLayout());
@@ -88,7 +94,6 @@ public class DatabaseSettings {
         close.addActionListener(e -> frame.dispose());
 
         update.addActionListener(e -> {
-//            updateProperties();
             frame.dispose();
         });
     }
@@ -100,32 +105,6 @@ public class DatabaseSettings {
         password.setText(props.get(ApplicationLiterals.DB_PASS));
         port.setText(props.get(ApplicationLiterals.DB_PORT));
         directory.setText(props.get(ApplicationLiterals.MY_SQL_DIR));
-        backup.setText(props.get(ApplicationLiterals.MY_SQL_BACKUP));
+        backup.setText(userSettings.getBackupLocation());
     }
-
-//    private void updateProperties() {
-//        String configFile = ReadConfig.getConfigFile(ApplicationLiterals.getLaunchPath());
-//        configFile = configFile
-//                .replace("bin/", ApplicationLiterals.EMPTY)
-//                .replace(ApplicationLiterals.DOUBLE_SLASH, ApplicationLiterals.SLASH);
-//
-//        try {
-//            PropertiesConfiguration config = new PropertiesConfiguration(configFile);
-//
-//            config.setProperty(ApplicationLiterals.DB_URL, url.getText().trim());
-//            config.setProperty(ApplicationLiterals.MY_SQL_CLASS, mySqlClass.getText().trim());
-//            config.setProperty(ApplicationLiterals.DB_USER, username.getText().trim());
-//            config.setProperty(ApplicationLiterals.DB_PASS, password.getText().trim());
-//            config.setProperty(ApplicationLiterals.DB_PORT, port.getText().trim());
-//            config.setProperty(ApplicationLiterals.MY_SQL_DIR, directory.getText().trim());
-//            config.setProperty(ApplicationLiterals.MY_SQL_BACKUP, backup.getText().trim());
-//            config.save();
-//
-//            JOptionPane.showMessageDialog(null,
-//                    "Settings Updated Successfully!", "Complete",
-//                    JOptionPane.INFORMATION_MESSAGE);
-//        } catch (ConfigurationException e) {
-//            new AppException(e);
-//        }
-//    }
 }
