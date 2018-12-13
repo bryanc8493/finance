@@ -85,11 +85,6 @@ public abstract class ApplicationLiterals {
 	public static final String DB_USER = "DBUsername";
 	public static final String DB_PASS = "DBPassword";
 	public static final String DB_PORT = "DBPort";
-	public static final String MY_SQL_DIR = "MySQLDirectory";
-	public static final String REPORT_TYPES = "ReportTypes";
-	public static final String ADMINISTRATOR = "Administrator";
-	public static final String DEPLOYMENT_LOCATION = "DeploymentLocation";
-	public static final String LOCAL_DEVELOPMENT_DIRECTORY = "LocalDevelopmentDirectory";
 
 	/*
 	 * Dates
@@ -114,11 +109,6 @@ public abstract class ApplicationLiterals {
 			"WY" };
 
 	private static final String LOCAL_WORKSPACE = "C:\\Users\\Bryan\\repos\\finance";
-
-	public static boolean isFromWorkspace() {
-		String startDir = System.getProperty(ApplicationLiterals.USER_DIR);
-		return startDir.equalsIgnoreCase(LOCAL_WORKSPACE);
-	}
 
 	public static NumberFormat getNumberFormat() {
 		NumberFormat nf = NumberFormat.getInstance();

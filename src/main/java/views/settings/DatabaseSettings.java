@@ -1,5 +1,6 @@
 package views.settings;
 
+import domain.beans.SystemSettings;
 import domain.beans.UserSettings;
 import literals.ApplicationLiterals;
 import literals.Icons;
@@ -26,10 +27,13 @@ public class DatabaseSettings {
     private JTextField backup = new JTextField(30);
 
     private UserSettings userSettings;
+    private SystemSettings systemSettings;
 
     public DatabaseSettings(boolean isModifiable) {
         logger.debug("Displaying database settings");
         userSettings = SettingsService.getCurrentUserSettings();
+        systemSettings = SettingsService.getSystemSettings();
+
         final JFrame frame = new JFrame("Database Settings");
 
         JLabel title = new Title("Current Database Settings");
@@ -93,9 +97,7 @@ public class DatabaseSettings {
 
         close.addActionListener(e -> frame.dispose());
 
-        update.addActionListener(e -> {
-            frame.dispose();
-        });
+        update.addActionListener(e -> frame.dispose());
     }
 
     private void setCurrentAppSettings(Map<String, String> props) {
@@ -104,7 +106,7 @@ public class DatabaseSettings {
         username.setText(props.get(ApplicationLiterals.DB_USER));
         password.setText(props.get(ApplicationLiterals.DB_PASS));
         port.setText(props.get(ApplicationLiterals.DB_PORT));
-        directory.setText(props.get(ApplicationLiterals.MY_SQL_DIR));
+        directory.setText(systemSettings.getDatabaseServerLocation());
         backup.setText(userSettings.getBackupLocation());
     }
 }

@@ -8,12 +8,12 @@ import org.apache.log4j.Logger;
 import persistence.Connect;
 import persistence.accounts.AccountData;
 import program.PersonalFinance;
+import utilities.security.Permission;
 import views.accounts.NewUser;
 import views.accounts.UserManagement;
 import views.common.components.HintPassField;
 import views.common.components.HintTextField;
 import utilities.PasswordGenerator;
-import utilities.ReadConfig;
 import utilities.exceptions.AppException;
 import utilities.security.Encoding;
 
@@ -191,7 +191,7 @@ public class VerifyAccess {
                 "Please input your username", "Reset",
                 JOptionPane.INFORMATION_MESSAGE);
         verifyNotBanned(user);
-        if(AccountData.doesUsernameExist(user) && isUserAllowedToChangePass(user)) {
+        if(AccountData.doesUsernameExist(user) && Permission.isUserAllowedToChangePass()) {
             String tempPassword = PasswordGenerator.generatePassword();
             AccountData.resetPassword(user, tempPassword);
 
@@ -207,23 +207,6 @@ public class VerifyAccess {
                                     "You have 10 minutes to login and set a new password.</html>",
                             "Password Reset", JOptionPane.WARNING_MESSAGE);
         }
-    }
-
-    private boolean isUserAllowedToChangePass(String user) {
-        String admin;
-        try {
-            admin = Encoding.decrypt(ReadConfig.getConfigValue(ApplicationLiterals.ADMINISTRATOR));
-        } catch (Exception e) {
-            throw new AppException(e);
-        }
-
-        if (user.equalsIgnoreCase("root") || user.equalsIgnoreCase(admin)) {
-            JOptionPane.showMessageDialog(frame,
-                    "Cannot use forgot password for this type of user!",
-                    "Unauthorized", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        return true;
     }
 
     private void banUser(String user) {

@@ -6,6 +6,8 @@ import org.apache.log4j.Logger;
 import persistence.Connect;
 import persistence.finance.Transactions;
 import utilities.DateUtility;
+import utilities.SystemUtility;
+import utilities.security.Permission;
 import views.accounts.UserManagement;
 import views.common.components.Title;
 import views.finance.Savings;
@@ -47,7 +49,7 @@ public class MenuBar {
         versionAndDate.setIcon(Icons.GREEN_DOT);
         versionAndDate.setText("v" + ApplicationLiterals.VERSION + "  (Released: " + releaseDate + ")");
 
-        if (ApplicationLiterals.isFromWorkspace()) {
+        if (SystemUtility.inDevelopment()) {
             versionAndDate.setIcon(Icons.RED_DOT);
             versionAndDate.setText("v" + ApplicationLiterals.VERSION + "  (Development)");
         } else {
@@ -110,13 +112,8 @@ public class MenuBar {
         });
 
         changePass.addActionListener(e -> {
-            if (!Connect.getCurrentUser().equalsIgnoreCase("root")) {
-                UserManagement.changePassword(false,
-                        Connect.getCurrentUser());
-            } else {
-                JOptionPane.showMessageDialog(frame,
-                        "Password cannot be changed for root user",
-                        "Error", JOptionPane.ERROR_MESSAGE);
+            if (Permission.isUserAllowedToChangePass()) {
+                UserManagement.changePassword(false, Connect.getCurrentUser());
             }
         });
 

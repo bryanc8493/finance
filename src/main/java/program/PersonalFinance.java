@@ -3,6 +3,7 @@ package program;
 import literals.ApplicationLiterals;
 import org.apache.log4j.Logger;
 import utilities.AppLogger;
+import utilities.SystemUtility;
 import views.common.Loading;
 import views.common.VerifyAccess;
 import views.reminders.ModifyReminders;
@@ -43,7 +44,7 @@ public class PersonalFinance {
         boolean isValidationRequired = true;
         setLookAndFeel();
 
-        if (ApplicationLiterals.isFromWorkspace())
+        if (SystemUtility.inDevelopment())
             isValidationRequired = false;
 
         if (isValidationRequired) {

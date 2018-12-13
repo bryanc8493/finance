@@ -1,5 +1,6 @@
 package views.reporting;
 
+import domain.beans.SystemSettings;
 import domain.dto.CategorySummary;
 import domain.beans.ReportRecord;
 import literals.ApplicationLiterals;
@@ -14,8 +15,8 @@ import program.PersonalFinance;
 import reporting.WriteReport;
 import utilities.DateLabelFormatter;
 import utilities.DateUtility;
-import utilities.ReadConfig;
 import utilities.exceptions.AppException;
+import utilities.settings.SettingsService;
 import views.common.MainMenu;
 import views.common.components.PrimaryButton;
 import views.common.components.Title;
@@ -25,10 +26,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 public class CustomReport {
 
@@ -379,7 +378,9 @@ public class CustomReport {
     }
 
     private static String[] getReportTypes() {
-        String types = ReadConfig.getConfigValue(ApplicationLiterals.REPORT_TYPES);
-        return types.split(ApplicationLiterals.COMMA);
+        SystemSettings settings = SettingsService.getSystemSettings();
+
+        Set<String> types = settings.getReportTypes();
+        return types.toArray(new String[types.size()]);
     }
 }
