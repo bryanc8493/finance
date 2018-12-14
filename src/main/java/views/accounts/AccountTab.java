@@ -1,5 +1,6 @@
 package views.accounts;
 
+import domain.beans.SystemSettings;
 import domain.beans.UpdatedRecord;
 import literals.ApplicationLiterals;
 import literals.Icons;
@@ -7,6 +8,7 @@ import org.apache.log4j.Logger;
 import persistence.accounts.AccountData;
 import utilities.exceptions.AppException;
 import utilities.security.Encoding;
+import utilities.settings.SettingsService;
 import views.common.Loading;
 import views.common.MainMenu;
 import views.common.components.*;
@@ -31,20 +33,22 @@ import java.util.Map;
 
 public class AccountTab extends JPanel {
 
-    private static final long serialVersionUID = -6032099937849808280L;
+    private Logger logger = Logger.getLogger(AccountTab.class);
+    private JScrollPane acctSP;
+    private JTable table;
+    private JTable fullTable;
+    private TableColumn passwordColumn;
+    private List<UpdatedRecord> updates;
 
-    private static Logger logger = Logger.getLogger(AccountTab.class);
-    private static JScrollPane acctSP;
-    private static JTable table;
-    private static JTable fullTable;
-    private static TableColumn passwordColumn;
-    private static List<UpdatedRecord> updates;
+    private SystemSettings settings;
 
     private boolean passVerified = false;
     private int attempts = 1;
 
     public AccountTab() {
         logger.debug("Initializing and populating Accounts Tab");
+        settings = SettingsService.getSystemSettings();
+
         Loading.update("Retrieving account data", 81);
 
         getAccountData(false);
@@ -298,7 +302,7 @@ public class AccountTab extends JPanel {
             } catch (UnsupportedEncodingException | GeneralSecurityException e1) {
                 throw new AppException(e1);
             }
-            if (inputKey.equals(ApplicationLiterals.getEncryptionKey())) {
+            if (inputKey.equals(settings.getEncryptionKey())) {
                 logger.debug("Encryption Key is correct");
                 setPassVerified(true);
                 return true;

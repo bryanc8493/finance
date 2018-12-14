@@ -33,15 +33,11 @@ public abstract class ApplicationLiterals {
 	public static final String APP_ARTIFACT = "finance";
 	public static final String VERSION = "3.0.0";
 
-	private static final String ROOT_PASSWORD = "RootPassword";
-	private static final String ENCRYPTION_KEY = "EncryptionKey";
-
 	public static final char VIEW_ONLY = '0';
 	public static final char FULL_ACCESS = '1';
 
 	public static final String USER_DIR = "user.dir";
 	public static final String USER_NAME = "user.name";
-	public static final String WINDOWS_TASK_DIRECTORY = "C:\\WINDOWS\\system32";
 
 
 	public static final Font APP_FONT = new Font("Sans Serif", Font.PLAIN, 16);
@@ -108,21 +104,11 @@ public abstract class ApplicationLiterals {
 			"RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI",
 			"WY" };
 
-	private static final String LOCAL_WORKSPACE = "C:\\Users\\Bryan\\repos\\finance";
-
 	public static NumberFormat getNumberFormat() {
 		NumberFormat nf = NumberFormat.getInstance();
 		nf.setMaximumFractionDigits(2);
 		nf.setMinimumFractionDigits(2);
 		return nf;
-	}
-
-	public static String getRootPassword() {
-		return ReadConfig.getConfigValue(ROOT_PASSWORD);
-	}
-
-	public static String getEncryptionKey() {
-		return ReadConfig.getConfigValue(ENCRYPTION_KEY);
 	}
 
 	public static NumberFormatter getCurrencyFormat() {

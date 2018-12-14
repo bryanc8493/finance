@@ -1,5 +1,6 @@
 package views.common;
 
+import domain.beans.SystemSettings;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import literals.enums.Databases;
@@ -9,6 +10,7 @@ import persistence.Connect;
 import persistence.accounts.AccountData;
 import program.PersonalFinance;
 import utilities.security.Permission;
+import utilities.settings.SettingsService;
 import views.accounts.NewUser;
 import views.accounts.UserManagement;
 import views.common.components.HintPassField;
@@ -30,11 +32,14 @@ public class VerifyAccess {
 
     private int attempts = 0;
     private Logger logger = Logger.getLogger(VerifyAccess.class);
+    private SystemSettings settings;
 
     private JFrame frame;
 
     public VerifyAccess() {
         logger.debug("Displaying GUI Prompting verification");
+        settings = SettingsService.getSystemSettings();
+
         frame = new JFrame("Version " + ApplicationLiterals.VERSION);
         JPanel p = new JPanel();
         JLabel title = new JLabel(ApplicationLiterals.APP_TITLE, SwingConstants.CENTER);
@@ -262,7 +267,7 @@ public class VerifyAccess {
             Connection con = Connect.getConnection();
 
             String SQL_TEXT = ("select AES_DECRYPT(ENCRYPTED_PASS, '"
-                    + Encoding.decrypt(ApplicationLiterals.getEncryptionKey())
+                    + Encoding.decrypt(settings.getEncryptionKey())
                     + "') from " + Databases.ACCOUNTS + ApplicationLiterals.DOT
                     + Tables.USERS + " where USERNAME ='" + user + "'");
 

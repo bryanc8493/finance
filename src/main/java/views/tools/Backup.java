@@ -125,7 +125,7 @@ public class Backup {
             throws GeneralSecurityException, IOException {
         String port = ReadConfig.getConfigValue(ApplicationLiterals.DB_PORT);
         return "\"" + systemSettings.getDatabaseServerLocation() + "mysqldump.exe\" -e -uroot " + "-p"
-                + Encoding.decrypt(ApplicationLiterals.getRootPassword())
+                + Encoding.decrypt(systemSettings.getRootPassword())
                 + " -hlocalhost " + "-P" + port + ApplicationLiterals.SPACE
                 + database + " > " + backupDir + "\\" + database + ".sql";
     }

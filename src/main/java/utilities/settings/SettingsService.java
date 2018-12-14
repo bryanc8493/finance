@@ -55,6 +55,8 @@ public class SettingsService {
             settings.setDeploymentLocation(rs.getString(5));
             settings.setDevelopmentLocation(rs.getString(6));
             settings.setDatabaseServerLocation(rs.getString(7));
+            settings.setEncryptionKey(rs.getString(8));
+            settings.setRootPassword(rs.getString(9));
         } catch (SQLException e) {
             throw new AppException(e);
         }

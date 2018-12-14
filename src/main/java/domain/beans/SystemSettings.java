@@ -10,6 +10,8 @@ public class SystemSettings {
     private String deploymentLocation;
     private String developmentLocation;
     private String databaseServerLocation;
+    private String encryptionKey;
+    private String rootPassword;
 
     public SystemSettings() {}
 
@@ -59,5 +61,21 @@ public class SystemSettings {
 
     public void setDatabaseServerLocation(String databaseServerLocation) {
         this.databaseServerLocation = databaseServerLocation;
+    }
+
+    public String getEncryptionKey() {
+        return encryptionKey;
+    }
+
+    public void setEncryptionKey(String encryptionKey) {
+        this.encryptionKey = encryptionKey;
+    }
+
+    public String getRootPassword() {
+        return rootPassword;
+    }
+
+    public void setRootPassword(String rootPassword) {
+        this.rootPassword = rootPassword;
     }
 }
