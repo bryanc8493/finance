@@ -14,8 +14,28 @@ public class UserSettings {
     private String templateFileLocation;
     private String chartOutputLocation;
     private String reportsOutputLocation;
+    private String username;
+    private boolean isDefault;
 
-    public UserSettings() {}
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
+    }
+
+    public UserSettings(String username) {
+        setUsername(username);
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getBackupLocation() {
         return backupLocation;

@@ -13,4 +13,15 @@ public class MapperUtil {
 
         return new LinkedHashSet<>(Arrays.asList(splitData));
     }
+
+    public static String mapSetToCommaSeparatedString(Set<String> rawData) {
+        StringBuffer sb = new StringBuffer();
+
+        for (String data : rawData) {
+            sb.append(data.trim() + ApplicationLiterals.COMMA);
+        }
+
+        String returnData = sb.toString();
+        return returnData.substring(0, returnData.length() - 1);
+    }
 }
