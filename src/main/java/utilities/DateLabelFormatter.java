@@ -6,7 +6,7 @@ import javax.swing.JFormattedTextField.AbstractFormatter;
 import java.text.ParseException;
 import java.util.Calendar;
 
-public class DateLabelFormatter extends AbstractFormatter{
+public class DateLabelFormatter extends AbstractFormatter {
 
     private static final long serialVersionUID = 3364542258272715973L;
 

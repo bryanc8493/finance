@@ -1,7 +1,6 @@
 package utilities.exceptions;
 
 import org.junit.Test;
-import utilities.exceptions.AppException;
 
 import static org.junit.Assert.assertNotNull;
 
