@@ -1,8 +1,6 @@
 package literals;
 
-import utilities.ReadConfig;
-
-import javax.swing.*;
+import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
@@ -31,7 +29,7 @@ public abstract class ApplicationLiterals {
 
 	public static final String APP_TITLE = "Finance Utility";
 	public static final String APP_ARTIFACT = "finance";
-	public static final String VERSION = "3.0.0";
+	public static final String VERSION = "3.0.1";
 
 	public static final char VIEW_ONLY = '0';
 	public static final char FULL_ACCESS = '1';
