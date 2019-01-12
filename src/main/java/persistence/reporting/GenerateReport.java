@@ -1,8 +1,9 @@
 package persistence.reporting;
 
-import beans.CategorySummary;
-import beans.MonthlyRecord;
-import beans.ReportRecord;
+import domain.beans.UserSettings;
+import domain.dto.CategorySummary;
+import domain.dto.MonthlyRecord;
+import domain.beans.ReportRecord;
 import literals.ApplicationLiterals;
 import literals.enums.Tables;
 import org.apache.log4j.Logger;
@@ -11,6 +12,7 @@ import persistence.finance.BalanceData;
 import persistence.finance.Transactions;
 import utilities.exceptions.AppException;
 import utilities.ReadConfig;
+import utilities.settings.SettingsService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -246,12 +248,11 @@ public class GenerateReport {
     }
 
     private static String readTemplateFile() {
+        UserSettings settings = SettingsService.getCurrentUserSettings();
 
         String fileAsString = "";
         try {
-            InputStream is = new FileInputStream(
-                    ReadConfig
-                            .getConfigValue(ApplicationLiterals.HTML_TEMPLATE));
+            InputStream is = new FileInputStream(settings.getTemplateFileLocation());
             BufferedReader buf = new BufferedReader(new InputStreamReader(is));
             String line = buf.readLine();
             StringBuilder sb = new StringBuilder();
@@ -305,8 +306,9 @@ public class GenerateReport {
         contents = contents.replace("${DATA}", dataValues);
 
         // Write to new file
-        File f = new File(
-                ReadConfig.getConfigValue(ApplicationLiterals.CHART_OUTPUT));
+        UserSettings settings = SettingsService.getCurrentUserSettings();
+
+        File f = new File(settings.getChartOutputLocation());
         try {
             FileWriter fw = new FileWriter(f);
             fw.write(contents);

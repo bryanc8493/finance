@@ -1,6 +1,6 @@
 package persistence;
 
-import beans.User;
+import domain.dto.User;
 import literals.ApplicationLiterals;
 import literals.enums.Databases;
 import literals.enums.Tables;

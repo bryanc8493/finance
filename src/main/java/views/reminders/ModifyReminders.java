@@ -1,6 +1,6 @@
 package views.reminders;
 
-import beans.Reminder;
+import domain.dto.Reminder;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;

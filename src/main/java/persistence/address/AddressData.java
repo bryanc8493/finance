@@ -1,7 +1,7 @@
 package persistence.address;
 
-import beans.Address;
-import beans.UpdatedRecord;
+import domain.beans.Address;
+import domain.beans.UpdatedRecord;
 import literals.ApplicationLiterals;
 import literals.enums.Databases;
 import literals.enums.Tables;

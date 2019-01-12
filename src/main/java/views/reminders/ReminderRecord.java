@@ -1,6 +1,6 @@
 package views.reminders;
 
-import beans.Reminder;
+import domain.dto.Reminder;
 import literals.Icons;
 import views.common.components.PrimaryButton;
 

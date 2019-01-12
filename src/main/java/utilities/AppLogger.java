@@ -15,18 +15,6 @@ public class AppLogger {
 
 	public AppLogger() {
 		logger = Logger.getLogger(this.getClass());
-//		String log4JPropertyFile = ApplicationLiterals.getLaunchPath().replace(
-//				ApplicationLiterals.BIN, ApplicationLiterals.EMPTY)
-//				+ ApplicationLiterals.LOG_PROPERTY_FILE;
-//		Properties p = new Properties();
-//
-//		try {
-//			p.load(new FileInputStream(log4JPropertyFile));
-//			PropertyConfigurator.configure(p);
-//			logHeader();
-//		} catch (IOException e) {
-//			throw new AppException(e);
-//		}
 		logHeader();
 	}
 

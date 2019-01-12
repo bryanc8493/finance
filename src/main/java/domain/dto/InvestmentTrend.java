@@ -1,4 +1,4 @@
-package beans;
+package domain.dto;
 
 import literals.enums.InvestmentAccount;
 import persistence.finance.InvestmentData;

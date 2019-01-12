@@ -1,6 +1,6 @@
 package persistence.reminders;
 
-import beans.Reminder;
+import domain.dto.Reminder;
 import literals.ApplicationLiterals;
 import literals.enums.Databases;
 import literals.enums.Tables;

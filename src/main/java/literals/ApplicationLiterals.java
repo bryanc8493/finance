@@ -31,17 +31,13 @@ public abstract class ApplicationLiterals {
 
 	public static final String APP_TITLE = "Finance Utility";
 	public static final String APP_ARTIFACT = "finance";
-	public static final String VERSION = "2.5.0";
-
-	private static final String ROOT_PASSWORD = "RootPassword";
-	private static final String ENCRYPTION_KEY = "EncryptionKey";
+	public static final String VERSION = "3.0.0";
 
 	public static final char VIEW_ONLY = '0';
 	public static final char FULL_ACCESS = '1';
 
 	public static final String USER_DIR = "user.dir";
 	public static final String USER_NAME = "user.name";
-	public static final String WINDOWS_TASK_DIRECTORY = "C:\\WINDOWS\\system32";
 
 
 	public static final Font APP_FONT = new Font("Sans Serif", Font.PLAIN, 16);
@@ -85,20 +81,6 @@ public abstract class ApplicationLiterals {
 	public static final String DB_USER = "DBUsername";
 	public static final String DB_PASS = "DBPassword";
 	public static final String DB_PORT = "DBPort";
-	public static final String MY_SQL_DIR = "MySQLDirectory";
-	public static final String MY_SQL_BACKUP = "MySQLBackupLocation";
-	public static final String EXPENSE_CATEGORIES = "ExpenseCategories";
-	public static final String INCOME_CATEGORIES = "IncomeCategories";
-	public static final String SAVINGS_SAFE_AMT = "SavingsSafeAmount";
-	public static final String VIEWING_AMOUNT_MAX = "ViewingRecords";
-	public static final String HTML_TEMPLATE = "HTMLTemplateFile";
-	public static final String CHART_OUTPUT = "ChartOutputFile";
-	public static final String REPORTS_OUTPUT_DIR = "ReportsOutputDirectory";
-	public static final String REPORT_TYPES = "ReportTypes";
-	public static final String ADMINISTRATOR = "Administrator";
-	public static final String DEPLOYMENT_LOCATION = "DeploymentLocation";
-	public static final String LOCAL_DEVELOPMENT_DIRECTORY = "LocalDevelopmentDirectory";
-	public static final String CREDIT_CARDS = "CreditCards";
 
 	/*
 	 * Dates
@@ -122,26 +104,11 @@ public abstract class ApplicationLiterals {
 			"RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI",
 			"WY" };
 
-	private static final String LOCAL_WORKSPACE = "C:\\Users\\Bryan\\repos\\finance";
-
-	public static boolean isFromWorkspace() {
-		String startDir = System.getProperty(ApplicationLiterals.USER_DIR);
-		return startDir.equalsIgnoreCase(LOCAL_WORKSPACE);
-	}
-
 	public static NumberFormat getNumberFormat() {
 		NumberFormat nf = NumberFormat.getInstance();
 		nf.setMaximumFractionDigits(2);
 		nf.setMinimumFractionDigits(2);
 		return nf;
-	}
-
-	public static String getRootPassword() {
-		return ReadConfig.getConfigValue(ROOT_PASSWORD);
-	}
-
-	public static String getEncryptionKey() {
-		return ReadConfig.getConfigValue(ENCRYPTION_KEY);
 	}
 
 	public static NumberFormatter getCurrencyFormat() {

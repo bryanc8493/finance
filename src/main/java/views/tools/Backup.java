@@ -1,12 +1,16 @@
 package views.tools;
 
+import domain.beans.SystemSettings;
+import domain.beans.UserSettings;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import literals.enums.Databases;
+import org.apache.log4j.Logger;
 import utilities.ReadConfig;
 import utilities.SystemUtility;
 import utilities.exceptions.AppException;
 import utilities.security.Encoding;
+import utilities.settings.SettingsService;
 import views.common.components.PrimaryButton;
 import views.common.components.Title;
 
@@ -20,10 +24,15 @@ import java.util.Date;
 
 public class Backup {
 
-    private final String BACKUP_DIR = ReadConfig.getConfigValue(ApplicationLiterals.MY_SQL_BACKUP);
-    private final String MYSQL_DIR = ReadConfig.getConfigValue(ApplicationLiterals.MY_SQL_DIR);
+    private final Logger logger = Logger.getLogger(Backup.class);
+    private UserSettings userSettings;
+    private SystemSettings systemSettings;
 
     public Backup() {
+        logger.debug("showing backup modal");
+        userSettings = SettingsService.getCurrentUserSettings();
+        systemSettings = SettingsService.getSystemSettings();
+
         final JFrame frame = new JFrame("Backup Status");
         JLabel title = new Title("Backup Status");
 
@@ -60,12 +69,12 @@ public class Backup {
 
         backup.addActionListener(e -> {
             frame.dispose();
-            performBackup(BACKUP_DIR);
+            performBackup(userSettings.getBackupLocation());
         });
     }
 
     private String getLastBackupTime(SimpleDateFormat returnFormat) {
-        File[] array = new File(BACKUP_DIR).listFiles();
+        File[] array = new File(userSettings.getBackupLocation()).listFiles();
         long lastBackupDate = 0;
 
         if (array == null || array.length == 0) {
@@ -115,8 +124,8 @@ public class Backup {
     private String generateBackupCommand(File backupDir, Databases database)
             throws GeneralSecurityException, IOException {
         String port = ReadConfig.getConfigValue(ApplicationLiterals.DB_PORT);
-        return "\"" + MYSQL_DIR + "mysqldump.exe\" -e -uroot " + "-p"
-                + Encoding.decrypt(ApplicationLiterals.getRootPassword())
+        return "\"" + systemSettings.getDatabaseServerLocation() + "mysqldump.exe\" -e -uroot " + "-p"
+                + Encoding.decrypt(systemSettings.getRootPassword())
                 + " -hlocalhost " + "-P" + port + ApplicationLiterals.SPACE
                 + database + " > " + backupDir + "\\" + database + ".sql";
     }
@@ -132,7 +141,7 @@ public class Backup {
     }
 
     private int deleteOtherBackups() {
-        File[] files = new File(BACKUP_DIR).listFiles();
+        File[] files = new File(userSettings.getBackupLocation()).listFiles();
 
         int deletedBackups = 0;
         for (File f : files) {

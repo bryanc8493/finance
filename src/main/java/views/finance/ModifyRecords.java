@@ -1,12 +1,12 @@
 package views.finance;
 
-import beans.Transaction;
-import beans.UpdatedRecord;
-import literals.ApplicationLiterals;
+import domain.beans.Transaction;
+import domain.beans.UpdatedRecord;
+import domain.beans.UserSettings;
 import literals.Icons;
 import org.apache.log4j.Logger;
 import persistence.finance.Transactions;
-import utilities.ReadConfig;
+import utilities.settings.SettingsService;
 import views.common.MainMenu;
 import views.common.components.PrimaryButton;
 import views.common.components.Title;
@@ -28,6 +28,8 @@ public class ModifyRecords {
 
     public static void editData() {
         logger.debug("Displaying GUI for user to modify transactions");
+        UserSettings userSettings = SettingsService.getCurrentUserSettings();
+
         final JFrame frame = new JFrame("Edit/Delete Transactions");
         ImageIcon appIcon = Icons.APP_ICON;
 
@@ -45,8 +47,7 @@ public class ModifyRecords {
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.add(title, BorderLayout.NORTH);
-        int entriesToRetrieve = Integer.parseInt(ReadConfig.getConfigValue(ApplicationLiterals.VIEWING_AMOUNT_MAX));
-        mainPanel.add(getTransactionData(entriesToRetrieve), BorderLayout.CENTER);
+        mainPanel.add(getTransactionData(userSettings.getViewingRecords()), BorderLayout.CENTER);
         mainPanel.add(bottom, BorderLayout.SOUTH);
 
         frame.add(mainPanel);

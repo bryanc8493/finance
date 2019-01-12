@@ -1,6 +1,6 @@
 package utilities;
 
-import beans.InvestmentTrend;
+import domain.dto.InvestmentTrend;
 import literals.enums.InvestmentAccount;
 
 import java.time.LocalDate;

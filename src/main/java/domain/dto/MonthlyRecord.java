@@ -1,8 +1,15 @@
-package beans;
+package domain.dto;
 
 import literals.ApplicationLiterals;
 
 public class MonthlyRecord {
+
+	private String month;
+	private int monthInt;
+	private int year;
+	private double expenses;
+	private double income;
+	private double cashFlow;
 
 	public MonthlyRecord() {
 		
@@ -80,12 +87,4 @@ public class MonthlyRecord {
 	public void setMonthInt(int monthInt) {
 		this.monthInt = monthInt;
 	}
-
-	private String month;
-	private int monthInt;
-	private int year;
-	private double expenses;
-	private double income;
-	private double cashFlow;
-
 }

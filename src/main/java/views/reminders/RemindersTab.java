@@ -1,6 +1,6 @@
 package views.reminders;
 
-import beans.Reminder;
+import domain.dto.Reminder;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import literals.enums.ReminderType;
@@ -20,7 +20,6 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
 
 public class RemindersTab extends JPanel {
 

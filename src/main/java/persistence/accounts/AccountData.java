@@ -1,8 +1,9 @@
 package persistence.accounts;
 
-import beans.Account;
-import beans.UpdatedRecord;
-import beans.User;
+import domain.beans.Account;
+import domain.beans.SystemSettings;
+import domain.beans.UpdatedRecord;
+import domain.dto.User;
 import literals.ApplicationLiterals;
 import literals.enums.Databases;
 import literals.enums.Tables;
@@ -11,6 +12,7 @@ import persistence.Connect;
 import utilities.exceptions.AppException;
 import utilities.SystemUtility;
 import utilities.security.Encoding;
+import utilities.settings.SettingsService;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -24,6 +26,11 @@ import java.util.Set;
 public class AccountData {
 
     private static Logger logger = Logger.getLogger(AccountData.class);
+    private static SystemSettings settings = retrieveSettings();
+
+    private static SystemSettings retrieveSettings() {
+        return SettingsService.getSystemSettings();
+    }
 
     public static String getUrl(String account) {
         logger.debug("Getting login URL for account: " + account);
@@ -49,7 +56,7 @@ public class AccountData {
         ResultSet rs;
         String key;
         try {
-            key = Encoding.decrypt(ApplicationLiterals.getEncryptionKey());
+            key = Encoding.decrypt(settings.getEncryptionKey());
         } catch(Exception e) {
             throw new AppException(e);
         }
@@ -74,7 +81,7 @@ public class AccountData {
 
         String key;
         try {
-            key = Encoding.decrypt(ApplicationLiterals.getEncryptionKey());
+            key = Encoding.decrypt(settings.getEncryptionKey());
         } catch (GeneralSecurityException | IOException e2) {
             throw new AppException(e2);
         }
@@ -106,7 +113,7 @@ public class AccountData {
 
         String key;
         try {
-            key = Encoding.decrypt(ApplicationLiterals.getEncryptionKey());
+            key = Encoding.decrypt(settings.getEncryptionKey());
         } catch (GeneralSecurityException | IOException e2) {
             throw new AppException(e2);
         }
@@ -150,7 +157,7 @@ public class AccountData {
                 + pass
                 + "', "
                 + "'"
-                + Encoding.decrypt(ApplicationLiterals.getEncryptionKey())
+                + Encoding.decrypt(settings.getEncryptionKey())
                 + "'), '" + url + "')";
         PreparedStatement ps;
 
@@ -243,7 +250,7 @@ public class AccountData {
                 + Tables.USERS + " VALUES('"
                 + user.getUsername() + "', '" + user.getEmail() + "', "
                 + "AES_ENCRYPT('" + user.getPassword() + "', '"
-                + Encoding.decrypt(ApplicationLiterals.getEncryptionKey())
+                + Encoding.decrypt(settings.getEncryptionKey())
                 + "'), now(), " + "'" + user.getPermission() + "', '"
                 + user.getStatus() + "', null, null)";
 
@@ -338,7 +345,7 @@ public class AccountData {
         try {
             String SQL_TEXT = "UPDATE " + Databases.ACCOUNTS + ApplicationLiterals.DOT + Tables.USERS
                     + " SET ENCRYPTED_PASS = AES_ENCRYPT('" + input + "', '"
-                    + Encoding.decrypt(ApplicationLiterals.getEncryptionKey())
+                    + Encoding.decrypt(settings.getEncryptionKey())
                     + "') " + " WHERE USERNAME = '" + Connect.getCurrentUser()
                     + "'";
 
@@ -359,7 +366,7 @@ public class AccountData {
             String SQL_TEXT = "UPDATE "
                     + Databases.ACCOUNTS + ApplicationLiterals.DOT + Tables.USERS
                     + " SET ENCRYPTED_PASS = AES_ENCRYPT('" + input + "', '"
-                    + Encoding.decrypt(ApplicationLiterals.getEncryptionKey())
+                    + Encoding.decrypt(settings.getEncryptionKey())
                     + "') " + " WHERE USERNAME = '" + user + "'";
 
             Connection con = Connect.getConnection();
@@ -401,7 +408,7 @@ public class AccountData {
                 String SQL_TEXT = "UPDATE " + Databases.ACCOUNTS + ApplicationLiterals.DOT
                         + Tables.USERS
                         + " SET ENCRYPTED_PASS = AES_ENCRYPT('" + pass + "', '"
-                        + Encoding.decrypt(ApplicationLiterals.getEncryptionKey()) + "'), "
+                        + Encoding.decrypt(settings.getEncryptionKey()) + "'), "
                         + "LOGIN_BEFORE_LOCK = (now() + INTERVAL 10 MINUTE), "
                         + "MUST_CHANGE_PASS = '1' WHERE USERNAME = '" + user + "'";
 
@@ -456,8 +463,7 @@ public class AccountData {
                             "AES_ENCRYPT('"
                                     + a.getData()
                                     + "', '"
-                                    + Encoding.decrypt(ApplicationLiterals
-                                    .getEncryptionKey()) + "')");
+                                    + Encoding.decrypt(settings.getEncryptionKey()) + "')");
                 } else {
                     query = query.replace("{data}", "'" + a.getData() + "'");
                 }

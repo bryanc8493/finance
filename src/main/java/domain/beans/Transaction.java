@@ -1,4 +1,4 @@
-package beans;
+package domain.beans;
 
 import java.io.Serializable;
 

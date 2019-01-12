@@ -6,12 +6,15 @@ import org.apache.log4j.Logger;
 import persistence.Connect;
 import persistence.finance.Transactions;
 import utilities.DateUtility;
+import utilities.SystemUtility;
+import utilities.security.Permission;
 import views.accounts.UserManagement;
 import views.common.components.Title;
 import views.finance.Savings;
 import views.salary.SalaryCalculator;
 import views.settings.AppSettings;
-import views.settings.DatabaseSettings;
+import views.settings.ApplicationSettingsModal;
+import views.settings.SystemSettingsModal;
 import views.tools.Backup;
 
 import javax.swing.*;
@@ -26,7 +29,6 @@ public class MenuBar {
             KeyEvent.VK_L);
     private JMenuItem salary = new JMenuItem("Salary", KeyEvent.VK_A);
     private JMenuItem modifyAppSettings = new JMenuItem("Modify");
-    private JMenuItem modifyDBSettings = new JMenuItem("Modify");
 
     private JMenuBar menuBar = new JMenuBar();
 
@@ -47,7 +49,7 @@ public class MenuBar {
         versionAndDate.setIcon(Icons.GREEN_DOT);
         versionAndDate.setText("v" + ApplicationLiterals.VERSION + "  (Released: " + releaseDate + ")");
 
-        if (ApplicationLiterals.isFromWorkspace()) {
+        if (SystemUtility.inDevelopment()) {
             versionAndDate.setIcon(Icons.RED_DOT);
             versionAndDate.setText("v" + ApplicationLiterals.VERSION + "  (Development)");
         } else {
@@ -80,10 +82,9 @@ public class MenuBar {
         toolsMenu.addSeparator();
         toolsMenu.add(refresh);
 
-        JMenu databaseSettings = new JMenu("Database");
-        JMenuItem viewDBSettings = new JMenuItem("View");
-        databaseSettings.add(viewDBSettings);
-        databaseSettings.add(modifyDBSettings);
+        JMenu systemSettings = new JMenu("System");
+        JMenuItem viewSystemSettings = new JMenuItem("View");
+        systemSettings.add(viewSystemSettings);
 
         JMenu appSettings = new JMenu("Application");
         JMenuItem viewAppSettings = new JMenuItem("View");
@@ -92,7 +93,7 @@ public class MenuBar {
 
         settingsMenu.add(appSettings);
         settingsMenu.addSeparator();
-        settingsMenu.add(databaseSettings);
+        settingsMenu.add(systemSettings);
 
         setPermissions(Connect.getUsersPermission());
 
@@ -110,13 +111,8 @@ public class MenuBar {
         });
 
         changePass.addActionListener(e -> {
-            if (!Connect.getCurrentUser().equalsIgnoreCase("root")) {
-                UserManagement.changePassword(false,
-                        Connect.getCurrentUser());
-            } else {
-                JOptionPane.showMessageDialog(frame,
-                        "Password cannot be changed for root user",
-                        "Error", JOptionPane.ERROR_MESSAGE);
+            if (Permission.isUserAllowedToChangePass()) {
+                UserManagement.changePassword(false, Connect.getCurrentUser());
             }
         });
 
@@ -142,22 +138,17 @@ public class MenuBar {
 
         viewAppSettings.addActionListener(e -> {
             logger.debug("Displaying app settings");
-            new AppSettings(false);
+            new ApplicationSettingsModal(false);
         });
 
         modifyAppSettings.addActionListener(e -> {
             logger.debug("Modifying app settings");
-            new AppSettings(true);
+            new ApplicationSettingsModal(true);
         });
 
-        viewDBSettings.addActionListener(e -> {
-            logger.debug("Dislaying database settings");
-            new DatabaseSettings(false);
-        });
-
-        modifyDBSettings.addActionListener(e -> {
-            logger.debug("Modifying database settings");
-            new DatabaseSettings(true);
+        viewSystemSettings.addActionListener(e -> {
+            logger.debug("Displaying system settings");
+            new SystemSettingsModal();
         });
     }
 
@@ -166,7 +157,6 @@ public class MenuBar {
             userMgmt.setEnabled(false);
             salary.setEnabled(false);
             modifyAppSettings.setEnabled(false);
-            modifyDBSettings.setEnabled(false);
         }
     }
 

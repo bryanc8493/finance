@@ -1,34 +1,35 @@
 package views.settings;
 
-import literals.ApplicationLiterals;
+import domain.beans.UserSettings;
 import literals.Icons;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import utilities.ReadConfig;
-import utilities.exceptions.AppException;
+import utilities.settings.SettingsService;
 import views.common.components.Title;
 import views.common.components.PrimaryButton;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.Set;
 
 public class AppSettings {
 
-    private JTextField expenseCategories = new JTextField(30);
-    private JTextField incomeCategories = new JTextField(30);
+    private JTextArea expenseCategories = new JTextArea(5, 30);
+    private JTextArea incomeCategories = new JTextArea(5,30);
     private JTextField savingsSafeAmt = new JTextField(30);
     private JTextField viewingRecords = new JTextField(30);
     private JTextField htmlTemplate = new JTextField(30);
     private JTextField chartOutput = new JTextField(30);
 
+    private UserSettings userSettings;
+
     public AppSettings(boolean isModifiable) {
+        userSettings = SettingsService.getCurrentUserSettings();
+
         final JFrame frame = new JFrame("Application Settings");
 
         JLabel title = new Title("Current Application Settings");
 
-        Map<String, String> props = ReadConfig.getAllProperties();
-        setCurrentAppSettings(props);
+        setCurrentAppSettings();
 
         JLabel expenseCategoriesLabel = new JLabel("Expense Categories");
         JLabel incomeCategoriesLabel = new JLabel("Income Categories");
@@ -37,17 +38,30 @@ public class AppSettings {
         JLabel htmlTemplateLabel = new JLabel("HTML Template File");
         JLabel chartOutputLabel = new JLabel("HTML Chart Output File");
 
-        JPanel contentLabels = new JPanel(new GridLayout(6, 1, 10, 10));
-        contentLabels.add(expenseCategoriesLabel);
-        contentLabels.add(incomeCategoriesLabel);
+        JPanel contentLabels = new JPanel(new GridLayout(4, 1, 10, 10));
+//        contentLabels.add(expenseCategoriesLabel);
+//        contentLabels.add(incomeCategoriesLabel);
         contentLabels.add(savingsSafeAmtLabel);
         contentLabels.add(viewingRecordsLabel);
         contentLabels.add(htmlTemplateLabel);
         contentLabels.add(chartOutputLabel);
 
-        JPanel contentItems = new JPanel(new GridLayout(6, 1, 10, 10));
-        contentItems.add(expenseCategories);
-        contentItems.add(incomeCategories);
+        final JScrollPane expenseArea = new JScrollPane(expenseCategories);
+        final JScrollPane incomeArea = new JScrollPane(incomeCategories);
+
+        JPanel categoryPanel = new JPanel(new GridLayout(2,2,10,10));
+        categoryPanel.add(expenseCategoriesLabel);
+        categoryPanel.add(expenseArea);
+        categoryPanel.add(incomeCategoriesLabel);
+        categoryPanel.add(incomeArea);
+
+        JPanel top = new JPanel(new BorderLayout());
+        top.add(title, BorderLayout.NORTH);
+        top.add(categoryPanel, BorderLayout.SOUTH);
+
+        JPanel contentItems = new JPanel(new GridLayout(4, 1, 10, 10));
+//        contentItems.add(expenseArea);
+//        contentItems.add(incomeArea);
         contentItems.add(savingsSafeAmt);
         contentItems.add(viewingRecords);
         contentItems.add(htmlTemplate);
@@ -68,7 +82,7 @@ public class AppSettings {
         bottom.add(close);
 
         JPanel main = new JPanel(new BorderLayout());
-        main.add(title, BorderLayout.NORTH);
+        main.add(top, BorderLayout.NORTH);
         main.add(content, BorderLayout.CENTER);
         main.add(bottom, BorderLayout.SOUTH);
 
@@ -84,47 +98,34 @@ public class AppSettings {
 
         close.addActionListener(e -> frame.dispose());
 
-        update.addActionListener(e -> {
-//            updateProperties();
-            frame.dispose();
-        });
+        update.addActionListener(e -> frame.dispose());
     }
 
-    private void setCurrentAppSettings(Map<String, String> props) {
-        expenseCategories.setText(props.get(ApplicationLiterals.EXPENSE_CATEGORIES));
-        incomeCategories.setText(props.get(ApplicationLiterals.INCOME_CATEGORIES));
-        savingsSafeAmt.setText(props.get(ApplicationLiterals.SAVINGS_SAFE_AMT));
-        viewingRecords.setText(props.get(ApplicationLiterals.VIEWING_AMOUNT_MAX));
-        htmlTemplate.setText(props.get(ApplicationLiterals.HTML_TEMPLATE));
-        chartOutput.setText(props.get(ApplicationLiterals.CHART_OUTPUT));
+    private void setCurrentAppSettings() {
+        expenseCategories.setText(setExpenseText());
+        incomeCategories.setText(setIncomeText());
+        expenseCategories.setLineWrap(true);
+        incomeCategories.setLineWrap(true);
+
+        savingsSafeAmt.setText(userSettings.getSavingsSafetyAmount().toString());
+        viewingRecords.setText(userSettings.getViewingRecords().toString());
+        htmlTemplate.setText(userSettings.getTemplateFileLocation());
+        chartOutput.setText(userSettings.getChartOutputLocation());
     }
 
-//    private void updateProperties() {
-//        String configFile = ReadConfig.getConfigFile(ApplicationLiterals.getLaunchPath());
-//        configFile = configFile.replace("bin/", ApplicationLiterals.EMPTY)
-//                .replace(ApplicationLiterals.DOUBLE_SLASH,
-//                        ApplicationLiterals.SLASH);
-//
-//        try {
-//            PropertiesConfiguration config = new PropertiesConfiguration(configFile);
-//
-//            config.setProperty(ApplicationLiterals.EXPENSE_CATEGORIES, expenseCategories.getText()
-//                    .trim());
-//            config.setProperty(ApplicationLiterals.INCOME_CATEGORIES, incomeCategories.getText()
-//                    .trim());
-//            config.setProperty(ApplicationLiterals.SAVINGS_SAFE_AMT, savingsSafeAmt.getText()
-//                    .trim());
-//            config.setProperty(ApplicationLiterals.VIEWING_AMOUNT_MAX, viewingRecords.getText()
-//                    .trim());
-//            config.setProperty(ApplicationLiterals.HTML_TEMPLATE, htmlTemplate.getText().trim());
-//            config.setProperty(ApplicationLiterals.CHART_OUTPUT, chartOutput.getText().trim());
-//            config.save();
-//
-//            JOptionPane.showMessageDialog(null,
-//                    "Settings Updated Successfully!", "Complete",
-//                    JOptionPane.INFORMATION_MESSAGE);
-//        } catch (ConfigurationException e) {
-//            new AppException(e);
-//        }
-//    }
+    private String setExpenseText() {
+        Set<String> expenseSet = userSettings.getExpenseCategories();
+
+        String text = Arrays.toString(expenseSet.toArray(new String[expenseSet.size()]));
+
+        return text.replace("[", "").replace("]", "");
+    }
+
+    private String setIncomeText() {
+        Set<String> incomeSet = userSettings.getIncomeCategories();
+
+        String text = Arrays.toString(incomeSet.toArray(new String[incomeSet.size()]));
+
+        return text.replace("[", "").replace("]", "");
+    }
 }

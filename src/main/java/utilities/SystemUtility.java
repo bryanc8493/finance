@@ -1,7 +1,9 @@
 package utilities;
 
+import domain.beans.SystemSettings;
 import literals.ApplicationLiterals;
 import org.apache.log4j.Logger;
+import utilities.settings.SettingsService;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -39,5 +41,14 @@ public class SystemUtility {
             }
         }
         return dir.delete();
+    }
+
+    public static boolean inDevelopment() {
+        SystemSettings settings = SettingsService.getSystemSettings();
+
+        String startDir = System.getProperty(ApplicationLiterals.USER_DIR)
+                .replace("\\", "/");
+
+        return startDir.equalsIgnoreCase(settings.getDevelopmentLocation());
     }
 }

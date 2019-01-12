@@ -1,7 +1,7 @@
 package persistence.salary;
 
-import beans.Salary;
-import beans.SalaryConfiguration;
+import domain.beans.Salary;
+import domain.dto.SalaryConfiguration;
 import literals.ApplicationLiterals;
 import literals.enums.Databases;
 import literals.enums.Tables;

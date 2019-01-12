@@ -1,7 +1,7 @@
 package views.salary;
 
-import beans.Salary;
-import beans.SalaryConfiguration;
+import domain.beans.Salary;
+import domain.dto.SalaryConfiguration;
 import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;

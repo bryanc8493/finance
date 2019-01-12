@@ -1,6 +1,6 @@
 package views.address;
 
-import beans.Address;
+import domain.beans.Address;
 import literals.Icons;
 import views.common.components.PrimaryButton;
 

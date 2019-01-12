@@ -1,11 +1,13 @@
 package utilities;
 
 
+import domain.beans.SystemSettings;
 import literals.ApplicationLiterals;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 import utilities.exceptions.AppException;
+import utilities.settings.SettingsService;
 
 import java.io.File;
 import java.text.ParseException;
@@ -39,7 +41,9 @@ public class DateUtility {
     }
 
     public static String getDeploymentDate() {
-        String productionDirectory = ReadConfig.getConfigValue(ApplicationLiterals.DEPLOYMENT_LOCATION);
+        SystemSettings settings = SettingsService.getSystemSettings();
+
+        String productionDirectory = settings.getDeploymentLocation();
         File productionArtifact = new File(productionDirectory +
                 ApplicationLiterals.SLASH +
                 ApplicationLiterals.APP_ARTIFACT +
