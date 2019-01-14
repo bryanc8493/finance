@@ -5,6 +5,7 @@ import literals.ApplicationLiterals;
 import literals.Icons;
 import org.apache.log4j.Logger;
 import services.FinancingService;
+import views.common.MainMenu;
 import views.common.components.ApplicationControl;
 import views.common.components.MultiLabelButton;
 import views.common.components.Title;
@@ -86,6 +87,7 @@ public class FinancedTab extends JPanel {
     }
 
     private void newPurchase() {
-        System.out.println("new purchase clicked");
+        MainMenu.closeWindow();
+        new FinancedPurchase();
     }
 }

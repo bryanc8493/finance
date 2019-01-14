@@ -1,5 +1,6 @@
 package services;
 
+import domain.dto.FinancingPurchase;
 import domain.dto.FinancingSummary;
 import literals.ApplicationLiterals;
 import persistence.payments.FinancingData;
@@ -14,6 +15,30 @@ public class FinancingService {
 
     public static List<FinancingSummary> getFinancingSummaryList() {
         return FinancingData.getFinancingSummaryData();
+    }
+
+    public static boolean addNewPurchase(FinancingPurchase purchase) {
+        return FinancingData.newPurchase(purchase);
+    }
+
+    public static List<FinancingSummary> mapFinancingPurchaseData(ResultSet rs) {
+        final List<FinancingSummary> summaryData = new ArrayList<>();
+
+        try {
+            while (rs.next()) {
+                FinancingSummary data = new FinancingSummary();
+                data.setTitle(rs.getString(1));
+                data.setTotal(rs.getDouble(2));
+                data.setRemaining(rs.getDouble(2));
+                data.setUniqueId(rs.getInt(3));
+
+                summaryData.add(data);
+            }
+        } catch (SQLException e) {
+            throw new AppException(e);
+        }
+
+        return summaryData;
     }
 
     public static List<FinancingSummary> mapFinancingSummaryData(ResultSet rs) {
