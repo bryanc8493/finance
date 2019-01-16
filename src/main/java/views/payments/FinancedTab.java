@@ -83,7 +83,8 @@ public class FinancedTab extends JPanel {
     }
 
     private void makePayment() {
-        System.out.println("payment clicked");
+        MainMenu.closeWindow();
+        new FinancedPayment();
     }
 
     private void newPurchase() {

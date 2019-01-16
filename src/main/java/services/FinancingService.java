@@ -21,6 +21,10 @@ public class FinancingService {
         return FinancingData.newPurchase(purchase);
     }
 
+    public static boolean addNewPayment(String id, Double amount) {
+        return FinancingData.newPayment(id, amount);
+    }
+
     public static List<FinancingSummary> mapFinancingPurchaseData(ResultSet rs) {
         final List<FinancingSummary> summaryData = new ArrayList<>();
 
@@ -50,6 +54,7 @@ public class FinancingService {
                 data.setTitle(rs.getString(1));
                 data.setTotal(rs.getDouble(2));
                 data.setRemaining(rs.getDouble(4));
+                data.setLastPaymentDate(rs.getDate(5));
                 data.setUniqueId(rs.getInt(7));
 
                 summaryData.add(data);

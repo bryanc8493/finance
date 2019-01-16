@@ -123,7 +123,7 @@ public class BalanceData {
                 + Views.EXPENSES_V + " where TRANSACTION_DATE like '" + year
                 + ApplicationLiterals.DASH + month + "%' "
                 + "and UPPER(TITLE) <> 'EVEN OUT' "
-                + "and Category <> 'Savings'";
+                + "and Category NOT IN('Savings', 'House Savings')";
         try {
             Connection con = Connect.getConnection();
             Statement statement = con.createStatement();

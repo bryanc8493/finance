@@ -1,5 +1,6 @@
 package persistence.payments;
 
+import domain.beans.Transaction;
 import domain.dto.FinancingPurchase;
 import domain.dto.FinancingSummary;
 import literals.ApplicationLiterals;
@@ -8,6 +9,7 @@ import literals.enums.Tables;
 import literals.enums.Views;
 import org.apache.log4j.Logger;
 import persistence.Connect;
+import persistence.finance.Transactions;
 import services.FinancingService;
 import utilities.exceptions.AppException;
 
@@ -84,6 +86,60 @@ public class FinancingData {
 
             con.close();
             return true;
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
+    public static boolean newPayment(String id, Double amount) {
+        logger.debug("Adding new financed payment");
+
+        Transaction transaction = new Transaction();
+        transaction.setTitle("financed payment");
+        transaction.setDescription("financed payment");
+        transaction.setDate(ApplicationLiterals.YEAR_MONTH_DAY.format(new java.util.Date()));
+        transaction.setType(ApplicationLiterals.EXPENSE);
+        transaction.setCategory("Financed Payment");
+        transaction.setAmount(String.valueOf(amount));
+
+        Transactions.addTransaction(transaction);
+
+        final int lastTransactionId = getLastTransactionId();
+
+        String query = "INSERT INTO " + Databases.FINANCIAL + ApplicationLiterals.DOT
+            + Tables.FINANCED_PAYMENTS + " (PURCHASE_ID, TRANSACTION_ID, DATE, AMOUNT) "
+            + "VALUES (?, ?, ?, ?)";
+
+        try {
+            Connection con = Connect.getConnection();
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setInt(1, Integer.parseInt(id));
+            ps.setInt(2, lastTransactionId);
+            ps.setDate(3, new Date(new java.util.Date().getTime()));
+            ps.setDouble(4, amount);
+
+            ps.executeUpdate();
+            con.close();
+            return true;
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
+    private static Integer getLastTransactionId() {
+        String query = "SELECT MAX(TRANSACTION_ID) FROM " + Databases.FINANCIAL
+            + ApplicationLiterals.DOT + Tables.MONTHLY_TRANSACTIONS;
+
+        try {
+            Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+
+            rs.next();
+            final int maxId = rs.getInt(1);
+            con.close();
+            return maxId;
         } catch (Exception e) {
             throw new AppException(e);
         }

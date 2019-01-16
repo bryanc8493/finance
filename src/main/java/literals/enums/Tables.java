@@ -3,6 +3,7 @@ package literals.enums;
 public enum Tables {
 	ADDRESSES,
 	BANNED_USERS,
+	FINANCED_PAYMENTS,
 	FINANCED_PURCHASES,
 	HOUSE_SAVINGS,
 	INVESTMENTS,

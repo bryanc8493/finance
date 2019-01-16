@@ -1,11 +1,22 @@
 package domain.dto;
 
+import java.util.Date;
+
 public class FinancingSummary {
 
     private String title;
     private Double total;
     private Double remaining;
     private Integer uniqueId;
+    private Date lastPaymentDate;
+
+    public Date getLastPaymentDate() {
+        return lastPaymentDate;
+    }
+
+    public void setLastPaymentDate(Date lastPaymentDate) {
+        this.lastPaymentDate = lastPaymentDate;
+    }
 
     public Integer getUniqueId() {
         return uniqueId;
