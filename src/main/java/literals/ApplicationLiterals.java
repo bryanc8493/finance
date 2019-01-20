@@ -1,7 +1,5 @@
 package literals;
 
-import utilities.ReadConfig;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.NumberFormatter;
@@ -28,10 +26,11 @@ public abstract class ApplicationLiterals {
 	public static final String SPACE = " ";
 	public static final String PERCENT = "%";
 	public static final String WHITESPACE = "\\s";
+	public static final String NULL_PLACEHOLDER = "- - -";
 
 	public static final String APP_TITLE = "Finance Utility";
 	public static final String APP_ARTIFACT = "finance";
-	public static final String VERSION = "3.0.0";
+	public static final String VERSION = "3.1.0";
 
 	public static final char VIEW_ONLY = '0';
 	public static final char FULL_ACCESS = '1';

@@ -148,7 +148,7 @@ public class NewAddress {
                     JOptionPane.showMessageDialog(null,
                             "New Address added successfully!", "Success",
                             JOptionPane.INFORMATION_MESSAGE);
-                    MainMenu.modeSelection(3);
+                    MainMenu.modeSelection(4);
                 }
             }
         });

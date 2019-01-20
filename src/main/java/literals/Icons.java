@@ -5,6 +5,7 @@ import javax.swing.*;
 public abstract class Icons {
 
 	public static final ImageIcon APP_ICON = new ImageIcon(Icons.class.getResource("/images/flow-market-icon.png"));
+	public static final ImageIcon BANK_ICON = new ImageIcon(Icons.class.getResource("/images/bank.png"));
 	public static final ImageIcon INSERT_ICON = new ImageIcon(Icons.class.getResource("/images/insert.png"));
 	public static final ImageIcon QUERY_ICON = new ImageIcon(Icons.class.getResource("/images/query.png"));
 	public static final ImageIcon DELETE_ICON = new ImageIcon(Icons.class.getResource("/images/database-delete.png"));
@@ -12,11 +13,7 @@ public abstract class Icons {
 	public static final ImageIcon REFRESH_ICON = new ImageIcon(Icons.class.getResource("/images/refresh.png"));
 	public static final ImageIcon HIDE_PASS_ICON = new ImageIcon(Icons.class.getResource("/images/hide-pass.png"));
 	public static final ImageIcon SHOW_PASS_ICON = new ImageIcon(Icons.class.getResource("/images/show-pass.png"));
-	public static final ImageIcon MOTIF_ICON = new ImageIcon(Icons.class.getResource("/images/motif.png"));
-	public static final ImageIcon NIMBUS_ICON = new ImageIcon(Icons.class.getResource("/images/nimbus.png"));
-	public static final ImageIcon WINDOWS_CLASSIC_ICON = new ImageIcon(Icons.class.getResource("/images/windows_classic.png"));
 	public static final ImageIcon EXIT_ICON = new ImageIcon(Icons.class.getResource("/images/exit.gif"));
-	public static final ImageIcon WINDOWS_ICON = new ImageIcon(Icons.class.getResource("/images/windows.png"));
 	public static final ImageIcon LOGOFF_ICON = new ImageIcon(Icons.class.getResource("/images/logoff.png"));
 	public static final ImageIcon CHANGE_PASS_ICON = new ImageIcon(Icons.class.getResource("/images/changepass.png"));
 	public static final ImageIcon SAVINGS_ICON = new ImageIcon(Icons.class.getResource("/images/savings.png"));

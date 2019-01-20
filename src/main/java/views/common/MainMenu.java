@@ -16,6 +16,7 @@ import views.common.components.MultiLabelButton;
 import views.common.components.ApplicationControl;
 import views.finance.*;
 import views.investments.InvestmentTab;
+import views.payments.FinancedTab;
 import views.reminders.RemindersTab;
 import views.reporting.CustomReport;
 
@@ -162,6 +163,7 @@ public class MainMenu {
         screen.add("Finance", mainPanel);
         if (Connect.getUsersPermission() == ApplicationLiterals.FULL_ACCESS) {
             screen.add("Investments", new InvestmentTab());
+            screen.add("Financed Purchases", new FinancedTab());
             screen.add("Accounts", new AccountTab());
         }
         screen.add("Addresses", new AddressTab());

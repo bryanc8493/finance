@@ -101,7 +101,7 @@ public class ModifyReminders implements ActionListener {
             } else {
                 frame.dispose();
                 MainMenu.closeWindow();
-                MainMenu.modeSelection(4);
+                MainMenu.modeSelection(5);
             }
         });
 

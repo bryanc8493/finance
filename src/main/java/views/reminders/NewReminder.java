@@ -100,7 +100,7 @@ public class NewReminder {
                 ReminderData.addReminder(reminderData);
                 MainMenu.closeWindow();
                 frame.dispose();
-                MainMenu.modeSelection(4);
+                MainMenu.modeSelection(5);
             } else {
                 logger.warn("invalid input");
                 frame.pack();

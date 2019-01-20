@@ -11,7 +11,6 @@ import persistence.Connect;
 import persistence.finance.BalanceData;
 import persistence.finance.Transactions;
 import utilities.exceptions.AppException;
-import utilities.ReadConfig;
 import utilities.settings.SettingsService;
 
 import javax.swing.*;
@@ -351,7 +350,7 @@ public class GenerateReport {
     private static Set<String> getDistinctCategories(
             Map<String, List<CategorySummary>> data) {
 
-        Set<String> set = new TreeSet<String>();
+        Set<String> set = new TreeSet<>();
         for (Map.Entry<String, List<CategorySummary>> m : data.entrySet()) {
             for (CategorySummary c : m.getValue()) {
                 set.add(c.getCategory());
