@@ -18,9 +18,9 @@ import java.util.List;
 
 public class FinancedTab extends JPanel {
 
-    private static Logger logger = Logger.getLogger(FinancedTab.class);
-    private static List<FinancingSummary> summaryData;
-    private static JTable summaryTable;
+    private Logger logger = Logger.getLogger(FinancedTab.class);
+    private List<FinancingSummary> summaryData;
+    private JTable summaryTable;
 
     public FinancedTab() {
         logger.debug("Initializing and populating Financed Tab");
@@ -55,7 +55,7 @@ public class FinancedTab extends JPanel {
     }
 
     private JScrollPane getListPanel() {
-        Object[][] records = FinancingService.transformDataForTable(summaryData);
+        Object[][] records = FinancingService.transformDataForSummaryTable(summaryData);
         Object[] columnNames = { "ID", "Title", "Total", "Remaining Balance"};
 
         DefaultTableModel model = new DefaultTableModel(records, columnNames) {
@@ -79,7 +79,7 @@ public class FinancedTab extends JPanel {
     }
 
     private void viewDetails() {
-        System.out.println("view clicked");
+        new FinancedPurchaseDetails();
     }
 
     private void makePayment() {

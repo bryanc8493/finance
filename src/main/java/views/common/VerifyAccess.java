@@ -177,7 +177,7 @@ public class VerifyAccess {
         hideButton.addActionListener(e -> {
             hideButton.setVisible(false);
             showButton.setVisible(true);
-            passField.setEchoChar('•');
+//            passField.setEchoChar('•');
         });
 
         forgot.addActionListener(e -> {

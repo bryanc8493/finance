@@ -1,6 +1,7 @@
 package persistence.payments;
 
 import domain.beans.Transaction;
+import domain.dto.FinancingDetail;
 import domain.dto.FinancingPurchase;
 import domain.dto.FinancingSummary;
 import literals.ApplicationLiterals;
@@ -42,6 +43,29 @@ public class FinancingData {
             unpaidPurchases.addAll(data);
             con.close();
             return unpaidPurchases;
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
+    public static List<FinancingDetail> getFinancingDetailsData() {
+        logger.debug("Getting all financing details data");
+
+        List<FinancingSummary> unpaidPurchases = getNewPurchases();
+        List<FinancingDetail> detailsUnpaidPurchases = FinancingService.mapSummaryToDetails(unpaidPurchases);
+
+        String query = "SELECT * FROM " + Databases.FINANCIAL
+                + ApplicationLiterals.DOT + Views.FINANCED;
+
+        try {
+            Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+
+            List<FinancingDetail> data = FinancingService.mapFinancingDetailData(rs);
+            detailsUnpaidPurchases.addAll(data);
+            con.close();
+            return detailsUnpaidPurchases;
         } catch (Exception e) {
             throw new AppException(e);
         }
