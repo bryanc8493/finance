@@ -148,7 +148,7 @@ public class AccountTab extends JPanel {
                     MainMenu.closeWindow();
                     JOptionPane.showMessageDialog(null, "Successfully updated account records",
                             "Updated!", JOptionPane.INFORMATION_MESSAGE);
-                    MainMenu.modeSelection(2);
+                    MainMenu.modeSelection(3);
                 });
 
                 delete.addActionListener(ex ->  {
@@ -168,7 +168,7 @@ public class AccountTab extends JPanel {
                             MainMenu.closeWindow();
                             JOptionPane.showMessageDialog(null, "Record deleted successfully",
                                     "Deleted!", JOptionPane.INFORMATION_MESSAGE);
-                            MainMenu.modeSelection(2);
+                            MainMenu.modeSelection(3);
                         }
                     } else {
                         JOptionPane.showMessageDialog(null,

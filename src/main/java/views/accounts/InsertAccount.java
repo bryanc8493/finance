@@ -135,7 +135,7 @@ public class InsertAccount {
                     JOptionPane.showMessageDialog(null,
                             "New Accounts added successfully!", "Success",
                             JOptionPane.INFORMATION_MESSAGE);
-                    MainMenu.modeSelection(2);
+                    MainMenu.modeSelection(3);
                 }
             }
         });

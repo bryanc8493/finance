@@ -110,7 +110,7 @@ public class AddressTab extends JPanel {
                         "Successfully updated addresses",
                         "Updated!",
                         JOptionPane.INFORMATION_MESSAGE);
-                MainMenu.modeSelection(3);
+                MainMenu.modeSelection(4);
             });
 
             delete.addActionListener(exc ->  {
@@ -130,7 +130,7 @@ public class AddressTab extends JPanel {
                             "Record deleted successfully",
                             "Deleted!",
                             JOptionPane.INFORMATION_MESSAGE);
-                        MainMenu.modeSelection(3);
+                        MainMenu.modeSelection(4);
                     }
                 } else {
                     JOptionPane.showMessageDialog(null,
