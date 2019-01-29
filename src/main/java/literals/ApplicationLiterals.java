@@ -1,6 +1,6 @@
 package literals;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;

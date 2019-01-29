@@ -1,6 +1,5 @@
 package program;
 
-import literals.ApplicationLiterals;
 import org.apache.log4j.Logger;
 import utilities.AppLogger;
 import utilities.SystemUtility;
